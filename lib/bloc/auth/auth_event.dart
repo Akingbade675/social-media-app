@@ -7,7 +7,7 @@ final class Login extends AuthEvent {
   final String username;
   final String password;
 
-  Login(this.username, this.password);
+  Login({required this.username, required this.password});
 }
 
 final class Logout extends AuthEvent {}
@@ -22,5 +22,5 @@ final class Register extends AuthEvent {
 final class CheckAuth extends AuthEvent {
   final String token;
 
-  CheckAuth(this.token);
+  CheckAuth({required this.token});
 }

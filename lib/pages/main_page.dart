@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:social_media_app/components/bottom_navigation_item.dart';
+import 'package:social_media_app/components/new_post_modal.dart';
 import 'package:social_media_app/config/app_icons.dart';
 import 'package:social_media_app/pages/my_home_page.dart';
 import 'package:social_media_app/pages/my_profile_page.dart';
@@ -24,6 +25,17 @@ class _MainPageState extends State<MainPage> {
       bottomNavigationBar: MyBottomNavigationBar(
         currentItem: currentIndex,
         onTap: (index) {
+          if (index == BottomNavigationItem.add) {
+            showModalBottomSheet(
+              isScrollControlled: true,
+              backgroundColor: Colors.transparent,
+              context: context,
+              builder: (context) {
+                return const NewPostModal();
+              },
+            );
+            return;
+          }
           setState(() {
             currentIndex = index;
           });

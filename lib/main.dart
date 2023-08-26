@@ -1,13 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:social_media_app/bloc/auth/auth_bloc.dart';
 import 'package:social_media_app/config/app_routes.dart';
 import 'package:social_media_app/config/app_strings.dart';
+import 'package:social_media_app/cubit/app/app_cubit.dart';
+import 'package:social_media_app/cubit/post/post_cubit.dart';
 
 void main() {
   runApp(
-    BlocProvider(
-      create: (context) => AuthBloc(),
+    MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => AppCubit(),
+        ),
+        BlocProvider(
+          create: (context) => PostCubit(),
+        )
+      ],
       child: const MyApp(),
     ),
   );

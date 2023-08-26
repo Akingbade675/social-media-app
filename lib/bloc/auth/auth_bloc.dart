@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
@@ -10,11 +12,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<Login>(_login);
   }
 
-  _login(Login event, Emitter<AuthState> emit) async {
+  FutureOr<void> _login(Login event, Emitter<AuthState> emit) async {
     emit(AuthLoading());
     try {
       debugPrint('Login: ${event.username} - ${event.password}');
       await Future.delayed(const Duration(seconds: 2));
+      emit(NavigateToMain());
       emit(AuthSuccess('token'));
     } catch (e) {
       emit(AuthFailure(e.toString()));

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_media_app/components/tool_bar.dart';
 import 'package:social_media_app/components/user_avatar.dart';
 import 'package:social_media_app/config/app_routes.dart';
 import 'package:social_media_app/config/app_strings.dart';
+import 'package:social_media_app/cubit/app/app_cubit.dart';
 import 'package:social_media_app/styles/app_text_styles.dart';
 
 enum ProfileMenu {
@@ -40,21 +42,21 @@ class MyProfilePage extends StatelessWidget {
           )
         ],
       ),
-      body: const Column(
+      body: Column(
         children: [
-          UserAvatar(),
-          SizedBox(height: 12),
+          const UserAvatar(),
+          const SizedBox(height: 12),
           Text(
-            'Mahadiru Abdur',
+            context.read<AppCubit>().state.user!.name!,
             style: AppText.header2,
           ),
-          SizedBox(height: 12),
-          Text(
+          const SizedBox(height: 12),
+          const Text(
             'Kaduna, Nigeria',
             style: AppText.subtitle3,
           ),
-          SizedBox(height: 24),
-          Row(
+          const SizedBox(height: 24),
+          const Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               ProfileCounts(title: AppStrings.followers, count: 456),
@@ -62,7 +64,7 @@ class MyProfilePage extends StatelessWidget {
               ProfileCounts(title: AppStrings.following, count: 826),
             ],
           ),
-          Divider(
+          const Divider(
             height: 24,
             indent: 24,
             endIndent: 24,

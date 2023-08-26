@@ -2,13 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:social_media_app/styles/app_colors.dart';
 
 class AppTextField extends StatelessWidget {
-  const AppTextField({super.key, required this.hint});
+  const AppTextField(
+      {super.key,
+      required this.hint,
+      this.controller,
+      this.obscureText = false});
 
+  final bool obscureText;
   final String hint;
+  final TextEditingController? controller;
 
   @override
   Widget build(BuildContext context) {
     return TextField(
+      controller: controller,
+      obscureText: obscureText,
       decoration: InputDecoration(
         hintText: hint,
         labelText: hint,
