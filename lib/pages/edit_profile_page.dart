@@ -90,7 +90,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
                             value: RadioItem.male,
                             contentPadding: EdgeInsets.zero,
                             groupValue: selectedRadio,
-                            title: const Text(AppStrings.male),
+                            title: const Text(
+                              AppStrings.male,
+                              style: AppText.body2,
+                            ),
                             visualDensity: const VisualDensity(
                               horizontal: -4,
                               vertical: -4,
@@ -107,7 +110,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
                             value: RadioItem.female,
                             contentPadding: EdgeInsets.zero,
                             groupValue: selectedRadio,
-                            title: const Text(AppStrings.female),
+                            title: const Text(
+                              AppStrings.female,
+                              style: AppText.body2,
+                            ),
                             visualDensity: const VisualDensity(
                               horizontal: -4,
                               vertical: -4,
@@ -124,7 +130,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
                             value: RadioItem.other,
                             contentPadding: EdgeInsets.zero,
                             groupValue: selectedRadio,
-                            title: const Text(AppStrings.other),
+                            title: const Text(
+                              AppStrings.other,
+                              style: AppText.body2,
+                            ),
                             visualDensity: const VisualDensity(
                               horizontal: -4,
                               vertical: -4,

@@ -1,3 +1,4 @@
 class AppConfig {
-  static const baseUrl = 'http://10.0.2.2:3000';
+  static const baseUrl = 'http://$ipAddress:3000';
+  static const ipAddress = '192.168.43.37';
 }

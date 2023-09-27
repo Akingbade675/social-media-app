@@ -1,4 +1,3 @@
-import 'package:social_media_app/data/model/post.dart';
 import 'package:social_media_app/data/service/base_service.dart';
 
 class CreatePostService extends ServiceBase<void> {
@@ -6,7 +5,7 @@ class CreatePostService extends ServiceBase<void> {
   final String? image;
   final String token;
 
-  CreatePostService(this.message, this.image, this.token);
+  CreatePostService({required this.message, this.image, required this.token});
 
   @override
   Future<void> call() async {
@@ -14,8 +13,9 @@ class CreatePostService extends ServiceBase<void> {
       'message': message,
     };
     if (image != null) {
-      body['image'] = image!;
+      body['image_url'] = image!;
     }
-    await post('post', body: body, token: token);
+    final response = await post('posts', body: body, token: token);
+    print(response);
   }
 }

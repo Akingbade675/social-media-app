@@ -7,10 +7,11 @@ class AppStrings {
   static const edit = 'Edit';
   static const logout = 'Logout';
   static const login = 'Login';
-  static const signUp = 'Sign Up';
+  static const signUp = 'Sign up';
   static const username = 'Username';
   static const email = 'Email';
   static const password = 'Password';
+  static const confirmPassword = 'Confirm Password';
   static const forgotPassword = 'Forgot Password?';
   static const orSignInWith = 'Or sign in with';
   static const loginWithGoogle = 'Login with Google';
@@ -33,6 +34,7 @@ class AppStrings {
   static const male = 'Male';
   static const female = 'Female';
   static const other = 'Other';
+  static const save = 'Save';
 
   static const nearby = 'Nearby';
 }

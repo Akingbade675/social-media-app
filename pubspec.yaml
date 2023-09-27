@@ -44,6 +44,16 @@ dependencies:
     http: ^1.1.0
     image_picker: ^1.0.2
     image_cropper: ^5.0.0
+    cloudinary_public: ^0.21.0
+    socket_io_client: ^2.0.3+1
+    flutter_secure_storage: ^9.0.0
+    timeago: ^3.5.0
+    hydrated_bloc: ^9.1.2
+    path_provider: ^2.1.1
+    connectivity_plus: ^4.0.2
+    intl: ^0.18.1
+    emoji_picker_flutter: ^1.6.1
+    flutter_webrtc: ^0.9.45
 
 dev_dependencies:
     flutter_test:
@@ -86,6 +96,23 @@ flutter:
         - family: Poppins
           fonts:
               - asset: assets/fonts/Poppins-Regular.ttf
+
+        - family: Lato
+          fonts:
+              - asset: assets/fonts/Lato-Light.ttf
+                weight: 300
+              - asset: assets/fonts/Lato-Bold.ttf
+                weight: 700
+
+        - family: Urbanist
+          fonts:
+              - asset: assets/fonts/Urbanist-Regular.ttf
+              - asset: assets/fonts/Urbanist-Medium.ttf
+                weight: 500
+              - asset: assets/fonts/Urbanist-Bold.ttf
+                weight: 700
+              - asset: assets/fonts/Urbanist-SemiBold.ttf
+                weight: 800
     #       - asset: fonts/Schyler-Italic.ttf
     #         style: italic
     #   - family: Trajan Pro
