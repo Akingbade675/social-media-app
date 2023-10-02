@@ -21,16 +21,12 @@ class AppText {
     fontSize: 16,
     fontWeight: FontWeight.w500,
   );
-  static const subtitle3 = TextStyle(
-    fontSize: 16,
-    fontWeight: FontWeight.w400,
-  );
+  static const subtitle3 =
+      TextStyle(fontSize: 16, fontWeight: FontWeight.w400, color: Colors.black);
   static const body1 = TextStyle(
     fontSize: 14,
     fontWeight: FontWeight.w500,
   );
-  static const body2 = TextStyle(
-    fontSize: 14,
-    fontWeight: FontWeight.w400,
-  );
+  static const body2 =
+      TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Colors.black);
 }

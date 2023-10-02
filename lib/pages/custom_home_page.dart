@@ -1,3 +1,4 @@
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -7,9 +8,12 @@ import 'package:social_media_app/components/post_item.dart';
 import 'package:social_media_app/components/posts_loading_widget.dart';
 import 'package:social_media_app/config/app_icons.dart';
 import 'package:social_media_app/config/app_routes.dart';
+import 'package:social_media_app/cubit/auth/auth_cubit.dart';
 import 'package:social_media_app/cubit/message/message_bloc.dart';
 import 'package:social_media_app/cubit/post/create_post_cubit.dart';
 import 'package:social_media_app/cubit/post/post_cubit_copy.dart';
+import 'package:social_media_app/cubit/video_call/video_call_cubit.dart';
+import 'package:social_media_app/repositories/socket_repo.dart';
 import 'package:social_media_app/styles/app_colors.dart';
 
 class CustomHomePage extends StatefulWidget {
@@ -25,6 +29,37 @@ class _CustomHomePageState extends State<CustomHomePage> {
   @override
   void initState() {
     super.initState();
+    SocketRepository.setInstance(context.read<AuthenticationCubit>());
+    SocketRepository.instance.initializeSocket();
+    context.read<VideoCallCubit>().init();
+    // AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
+    //   if (!isAllowed) {
+    //     showDialog(
+    //       context: context,
+    //       builder: (_) => AlertDialog(
+    //         title: const Text('Allow Notifications'),
+    //         content: const Text(
+    //             'Please allow notifications to get the best experience'),
+    //         actions: [
+    //           TextButton(
+    //             onPressed: () {
+    //               Navigator.of(context).pop();
+    //             },
+    //             child: const Text('Cancel'),
+    //           ),
+    //           TextButton(
+    //             onPressed: () {
+    //               AwesomeNotifications()
+    //                   .requestPermissionToSendNotifications()
+    //                   .then((_) => Navigator.of(context).pop());
+    //             },
+    //             child: const Text('Allow'),
+    //           ),
+    //         ],
+    //       ),
+    //     );
+    //   }
+    // });
     _scrollController = ScrollController();
     _scrollController.addListener(() {
       final maxScroll = _scrollController.position.maxScrollExtent;

@@ -13,6 +13,7 @@ import 'package:social_media_app/pages/my_profile_page.dart';
 import 'package:social_media_app/pages/my_sign_up_page.dart';
 import 'package:social_media_app/pages/nearby_page.dart';
 import 'package:social_media_app/pages/other_user_profile_page_copy.dart';
+import 'package:social_media_app/pages/video_call_page.dart';
 
 class AppRoutes {
   static final Map<String, Widget Function(BuildContext)> pages = {
@@ -24,6 +25,8 @@ class AppRoutes {
     editProfile: (context) => editProfilePage,
     nearby: (context) => nearbyPage,
     chat: (context) => chatPage,
+    otherUserProfile: (context) => otherUserProfilePage,
+    videoCall: (context) => videoCallPage,
   };
 
   static final loginPage = BlocProvider(
@@ -57,6 +60,8 @@ class AppRoutes {
 
   static const otherUserProfilePage = OtherUserProfilePage();
 
+  static const videoCallPage = VideoCallPage(isCaller: true);
+
   static const login = '/login';
   static const signup = '/signup';
   static const home = '/home';
@@ -65,4 +70,6 @@ class AppRoutes {
   static const editProfile = '/edit_profile';
   static const nearby = '/nearby';
   static const chat = '/chat';
+  static const otherUserProfile = '/other_user_profile';
+  static const videoCall = '/video_call';
 }

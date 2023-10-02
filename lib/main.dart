@@ -17,6 +17,8 @@ import 'package:social_media_app/cubit/post/create_post_cubit.dart';
 import 'package:social_media_app/cubit/post/post_cubit.dart';
 import 'package:social_media_app/cubit/post/post_cubit_copy.dart';
 import 'package:social_media_app/cubit/users/users_cubit.dart';
+import 'package:social_media_app/cubit/video_call/video_call_cubit.dart';
+import 'package:social_media_app/data/service/notification_service.dart';
 import 'package:social_media_app/repositories/user_repo.dart';
 import 'package:social_media_app/styles/app_colors.dart';
 
@@ -32,6 +34,8 @@ void main() async {
     statusBarIconBrightness: Brightness.dark,
     statusBarBrightness: Brightness.dark,
   ));
+
+  await NotificationService.initializeNotification();
 
   runApp(
     RepositoryProvider(
@@ -73,6 +77,11 @@ void main() async {
             ),
           ),
           BlocProvider(
+            create: (context) => VideoCallCubit(
+              authCubit: context.read<AuthenticationCubit>(),
+            ),
+          ),
+          BlocProvider(
             create: (_) => EmojiKeyboardCubit(),
           ),
         ],
@@ -83,6 +92,9 @@ void main() async {
 }
 
 class MyApp extends StatefulWidget {
+  static final GlobalKey<NavigatorState> navigatorKey =
+      GlobalKey<NavigatorState>();
+
   const MyApp({super.key});
 
   @override
@@ -100,6 +112,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      navigatorKey: MyApp.navigatorKey,
       title: AppStrings.appName,
       theme: ThemeData(
         fontFamily: 'Poppins',

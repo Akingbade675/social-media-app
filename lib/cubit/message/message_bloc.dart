@@ -2,6 +2,7 @@
 import 'dart:async';
 
 import 'package:equatable/equatable.dart';
+// ignore: depend_on_referenced_packages
 import 'package:async/async.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:social_media_app/data/model/user.dart';
@@ -14,13 +15,14 @@ import 'package:social_media_app/data/service/get_chats.dart';
 
 enum TypingStatus { send, received }
 
-class ChatBloc extends HydratedBloc<ChatEvent, ChatStates> {
+class ChatBloc extends HydratedBloc<ChatEvent, ChatState> {
   final AuthenticationCubit _authenticationCubit;
   late SocketRepository _socketRepository;
   RestartableTimer? _timer;
+  TypingState? previousTypingState;
 
   ChatBloc(this._authenticationCubit) : super(const ChatState()) {
-    _socketRepository = SocketRepository(_authenticationCubit);
+    _socketRepository = SocketRepository.instance;
 
     on<ChatStarted>(_onStarted);
     on<ChatReceived>(_onReceived);
@@ -28,15 +30,15 @@ class ChatBloc extends HydratedBloc<ChatEvent, ChatStates> {
     on<TypingEvent>(_onTyping);
   }
 
-  _resetOrStartTimer(Emitter<ChatStates> emit) {
+  _resetOrStartTimer(Emitter<ChatState> emit) {
     if (_timer == null) {
       _timer = RestartableTimer(
         const Duration(seconds: 3),
         () => {
           _timer = null,
-          emit(
-            const TypingState(isTyping: false),
-          ),
+          emit(state.copyWith(
+            typingState: const TypingState(isTyping: false),
+          )),
         },
       );
     } else {
@@ -44,7 +46,7 @@ class ChatBloc extends HydratedBloc<ChatEvent, ChatStates> {
     }
   }
 
-  _onStarted(ChatStarted event, Emitter<ChatStates> emit) async {
+  _onStarted(ChatStarted event, Emitter<ChatState> emit) async {
     // if (state.chats.isEmpty) {
     //   final chats = await _getChats();
     //   emit(state.copyWith(chats: chats));
@@ -56,11 +58,11 @@ class ChatBloc extends HydratedBloc<ChatEvent, ChatStates> {
     final chats =
         await GetChatsService(token: _authenticationCubit.getToken(), page: 0)
             .call();
-    emit((state as ChatState).copyWith(chats: chats));
-    _connectAndListen();
+    emit(state.copyWith(chats: chats));
+    _registerChatListeners();
   }
 
-  _onSent(ChatSent event, Emitter<ChatStates> emit) async {
+  _onSent(ChatSent event, Emitter<ChatState> emit) async {
     final message = event.message.trim();
     // final chat = Chat(
     //   id: '1',
@@ -83,7 +85,7 @@ class ChatBloc extends HydratedBloc<ChatEvent, ChatStates> {
     }
   }
 
-  _onReceived(ChatReceived event, Emitter<ChatStates> emit) async {
+  _onReceived(ChatReceived event, Emitter<ChatState> emit) async {
     final chat = event.chat;
     // final index = state.chats.indexWhere((c) => c.id == chat.id);
     // if (index == -1) {
@@ -93,8 +95,7 @@ class ChatBloc extends HydratedBloc<ChatEvent, ChatStates> {
     //   chats[index] = chat;
     //   emit(state.copyWith(chats: chats));
     // }
-    emit((state as ChatState)
-        .copyWith(chats: [chat, ...(state as ChatState).chats]));
+    emit(state.copyWith(chats: [chat, ...state.chats]));
   }
 
   @override
@@ -103,11 +104,19 @@ class ChatBloc extends HydratedBloc<ChatEvent, ChatStates> {
   }
 
   @override
-  Map<String, dynamic>? toJson(ChatStates state) {
-    if (state is ChatState) {
+  Map<String, dynamic>? toJson(ChatState state) {
+    // Check if the typingState has changed
+    final typingStateChanged = state.typingState != previousTypingState;
+
+    // Store the current state as the previous state
+    previousTypingState = state.typingState;
+
+    // Only save the state if typingState has not changed
+    if (!typingStateChanged) {
       return state.toJson();
+    } else {
+      return null;
     }
-    return null;
   }
 
   @override
@@ -116,10 +125,7 @@ class ChatBloc extends HydratedBloc<ChatEvent, ChatStates> {
     return super.close();
   }
 
-  void _connectAndListen() async {
-    _socketRepository.connect();
-
-    //When an event recieved from server, data is added to the stream
+  void _registerChatListeners() async {
     _socketRepository.listen('newMessage', (newMessage) {
       final newChat = Chat.fromMap(newMessage);
       add(ChatReceived(chat: newChat));
@@ -135,7 +141,7 @@ class ChatBloc extends HydratedBloc<ChatEvent, ChatStates> {
     });
   }
 
-  FutureOr<void> _onTyping(TypingEvent event, Emitter<ChatStates> emit) {
+  FutureOr<void> _onTyping(TypingEvent event, Emitter<ChatState> emit) {
     final User user = event.user;
     final TypingStatus status = event.status;
     print('I am typing...');
@@ -144,7 +150,8 @@ class ChatBloc extends HydratedBloc<ChatEvent, ChatStates> {
         'user': user,
       });
     } else {
-      emit(TypingState(user: user, isTyping: true));
+      emit(
+          state.copyWith(typingState: TypingState(isTyping: true, user: user)));
       _resetOrStartTimer(emit);
     }
   }
@@ -154,11 +161,14 @@ sealed class ChatEvent {}
 
 final class ChatStarted extends ChatEvent {}
 
-final class TypingState extends ChatStates {
+final class TypingState extends Equatable {
   final bool isTyping;
   final User? user;
 
   const TypingState({this.user, required this.isTyping});
+
+  @override
+  List<Object?> get props => [isTyping, user?.id];
 }
 
 final class TypingEvent extends ChatEvent {
@@ -212,23 +222,26 @@ final class ChatError extends ChatEvent {
 
 final class ChatClear extends ChatEvent {}
 
-class ChatStates extends Equatable {
-  const ChatStates();
+// class ChatStates extends Equatable {
+//   const ChatStates();
 
-  @override
-  List<Object?> get props => [];
-}
+//   @override
+//   List<Object?> get props => [];
+// }
 
-class ChatState extends ChatStates {
+class ChatState extends Equatable {
   final List<Chat> chats;
+  final TypingState? typingState;
   final int unread;
 
-  const ChatState({this.unread = 0, this.chats = const []});
+  const ChatState({this.typingState, this.unread = 0, this.chats = const []});
 
-  ChatState copyWith({List<Chat>? chats, int? unread}) {
+  ChatState copyWith(
+      {List<Chat>? chats, int? unread, TypingState? typingState}) {
     return ChatState(
       chats: chats ?? this.chats,
       unread: unread ?? this.unread,
+      typingState: typingState ?? this.typingState,
     );
   }
 

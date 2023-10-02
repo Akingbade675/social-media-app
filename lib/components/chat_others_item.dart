@@ -54,7 +54,7 @@ class ChatOtherItem extends StatelessWidget {
                     ).copyWith(
                       topRight: const Radius.circular(16),
                       topLeft: showProfile
-                          ? const Radius.circular(0)
+                          ? const Radius.circular(4)
                           : const Radius.circular(16),
                     ),
                   ),

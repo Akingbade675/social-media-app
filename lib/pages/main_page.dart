@@ -39,47 +39,123 @@ class _MainPageState extends State<MainPage> {
       listener: (context, state) {},
       builder: (context, state) {
         return Scaffold(
-          extendBody: true,
-          body: _pages[currentIndex.index],
-          bottomNavigationBar: MyBottomNavigationBar(
-            currentItem: currentIndex,
-            onTap: (index) {
-              if (index == BottomNavigationItem.home && currentIndex == index) {
-                context.read<PostCubit>().scrollPostToTop();
-                return;
-              }
+            extendBody: true,
+            body: _pages[currentIndex.index],
+            // bottomNavigationBar: MyBottomNavigationBar(
+            //   currentItem: currentIndex,
+            //   onTap: (index) {
+            //     if (index == BottomNavigationItem.home && currentIndex == index) {
+            //       context.read<PostCubit>().scrollPostToTop();
+            //       return;
+            //     }
 
-              if (index == BottomNavigationItem.add) {
-                showModalBottomSheet(
-                  isScrollControlled: true,
-                  backgroundColor: AppColor.white,
-                  constraints: BoxConstraints(
-                    maxHeight: MediaQuery.of(context).size.height * 0.9,
-                  ),
-                  transitionAnimationController: AnimationController(
-                    vsync: Navigator.of(context),
-                    duration: const Duration(milliseconds: 300),
-                  ),
-                  context: context,
-                  builder: (context) {
-                    return const CreatePostModalSheet();
-                  },
-                );
-                return;
-              }
+            //     if (index == BottomNavigationItem.add) {
+            //       showModalBottomSheet(
+            //         isScrollControlled: true,
+            //         backgroundColor: AppColor.white,
+            //         constraints: BoxConstraints(
+            //           maxHeight: MediaQuery.of(context).size.height * 0.9,
+            //         ),
+            //         transitionAnimationController: AnimationController(
+            //           vsync: Navigator.of(context),
+            //           duration: const Duration(milliseconds: 300),
+            //         ),
+            //         context: context,
+            //         builder: (context) {
+            //           return const CreatePostModalSheet();
+            //         },
+            //       );
+            //       return;
+            //     }
 
-              if (index == BottomNavigationItem.messages) {
-                Navigator.pushNamed(context, AppRoutes.chat);
-                return;
-              }
+            //     if (index == BottomNavigationItem.messages) {
+            //       Navigator.pushNamed(context, AppRoutes.chat);
+            //       return;
+            //     }
 
-              setState(() {
-                currentIndex = index;
-              });
-            },
-          ),
-        );
+            //     setState(() {
+            //       currentIndex = index;
+            //     });
+            //   },
+            // ),
+            bottomNavigationBar: BottomNavigationBar(
+              type: BottomNavigationBarType.fixed,
+              currentIndex: currentIndex.index,
+              showSelectedLabels: false,
+              showUnselectedLabels: false,
+              onTap: (index) {
+                if (index == BottomNavigationItem.home.index &&
+                    currentIndex.index == index) {
+                  context.read<PostCubit>().scrollPostToTop();
+                  return;
+                }
+
+                if (index == BottomNavigationItem.add.index) {
+                  showModalBottomSheet(
+                    isScrollControlled: true,
+                    backgroundColor: AppColor.white,
+                    enableDrag: false,
+                    // constraints: BoxConstraints(
+                    //   maxHeight: MediaQuery.of(context).size.height * 0.9,
+                    // ),
+                    transitionAnimationController: AnimationController(
+                      vsync: Navigator.of(context),
+                      duration: const Duration(milliseconds: 500),
+                    ),
+                    context: context,
+                    builder: (context) {
+                      return const CreatePostModalSheet();
+                    },
+                  );
+                  return;
+                }
+
+                if (index == BottomNavigationItem.messages.index) {
+                  Navigator.pushNamed(context, AppRoutes.chat);
+                  return;
+                }
+
+                setState(() {
+                  currentIndex = BottomNavigationItem.values[index];
+                });
+              },
+              items: [
+                BottomNavigationBarItem(
+                  icon: MyIcon(AppIcons.icHome),
+                  label: 'Home',
+                ),
+                BottomNavigationBarItem(
+                  icon: MyIcon(AppIcons.icFavorite),
+                  label: 'Favourites',
+                ),
+                BottomNavigationBarItem(
+                  icon: MyIcon(AppIcons.icAdd),
+                  label: 'Add Post',
+                ),
+                BottomNavigationBarItem(
+                  icon: MyIcon(AppIcons.icMessage),
+                  label: 'Messages',
+                ),
+                BottomNavigationBarItem(
+                  icon: MyIcon(AppIcons.icProfile),
+                  label: 'Profile',
+                ),
+              ],
+            ));
       },
+    );
+  }
+
+  SvgPicture MyIcon(String icon) {
+    return SvgPicture.asset(
+      icon,
+      colorFilter: ColorFilter.mode(
+          currentIndex == BottomNavigationItem.home
+              ? AppColor.primaryDark
+              : AppColor.grey,
+          BlendMode.srcIn),
+      width: 20,
+      height: 20,
     );
   }
 

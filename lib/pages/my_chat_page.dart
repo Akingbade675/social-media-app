@@ -4,6 +4,7 @@ import 'package:social_media_app/components/chat_me_item.dart';
 import 'package:social_media_app/components/chat_others_item.dart';
 import 'package:social_media_app/components/input_bottom.dart';
 import 'package:social_media_app/components/tool_bar.dart';
+import 'package:social_media_app/config/app_routes.dart';
 import 'package:social_media_app/cubit/auth/auth_cubit.dart';
 import 'package:social_media_app/cubit/emoji_keyboard_cubit.dart';
 import 'package:social_media_app/cubit/message/message_bloc.dart';
@@ -32,48 +33,49 @@ class MyChatPage extends StatelessWidget {
         canPop: context.read<EmojiKeyboardCubit>().willPopScope(),
         child: Builder(
           builder: (context) {
-            final typingState =
-                (context.watch<ChatBloc>().state as TypingState);
-
+            final chatState = context.watch<ChatBloc>().state;
             return Scaffold(
               backgroundColor: const Color.fromARGB(255, 241, 241, 241),
               appBar: ToolBar(
                 title: 'Chat',
-                subTitle: typingState.isTyping
-                    ? '${typingState.user?.name} is typing...'
-                    : '',
+                actions: [
+                  IconButton(
+                    icon: const Icon(Icons.call, color: AppColor.white),
+                    onPressed: () {
+                      Navigator.of(context).pushNamed(AppRoutes.videoCall,
+                          arguments: {'isCaller': true});
+                    },
+                  ),
+                ],
+                subTitle: (chatState.typingState != null &&
+                        chatState.typingState?.isTyping == true)
+                    ? '${chatState.typingState?.user?.name} is typing...'
+                    : null,
               ),
               body: Column(
                 children: [
                   Expanded(
-                    child: Builder(
-                      builder: (context) {
-                        final chatState =
-                            (context.watch<ChatBloc>().state as ChatState);
-                        return ListView.builder(
-                          reverse: true,
-                          keyboardDismissBehavior:
-                              ScrollViewKeyboardDismissBehavior.onDrag,
-                          itemCount: chatState.chats.length,
-                          itemBuilder: (context, index) {
-                            final user = (context
-                                    .read<AuthenticationCubit>()
-                                    .state as AuthenticationAuthenticated)
-                                .user;
-                            final chat = chatState.chats[index];
-                            return Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                if (index == chatState.chats.length - 1 ||
-                                    isAnotherDay(chat, chatState, index))
-                                  Align(
-                                    alignment: Alignment.center,
-                                    child: ChatDateWidget(date: chat.createdAt),
-                                  ),
-                                getChatItemWidget(chat, user, index, chatState),
-                              ],
-                            );
-                          },
+                    child: ListView.builder(
+                      reverse: true,
+                      keyboardDismissBehavior:
+                          ScrollViewKeyboardDismissBehavior.onDrag,
+                      itemCount: chatState.chats.length,
+                      itemBuilder: (context, index) {
+                        final user = (context.read<AuthenticationCubit>().state
+                                as AuthenticationAuthenticated)
+                            .user;
+                        final chat = chatState.chats[index];
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            if (index == chatState.chats.length - 1 ||
+                                isAnotherDay(chat, chatState, index))
+                              Align(
+                                alignment: Alignment.center,
+                                child: ChatDateWidget(date: chat.createdAt),
+                              ),
+                            getChatItemWidget(chat, user, index, chatState),
+                          ],
                         );
                       },
                     ),

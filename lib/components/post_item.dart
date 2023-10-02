@@ -111,7 +111,7 @@ class PostItem extends StatelessWidget {
                     ),
               label: Text(
                 post.likesCount.toString(),
-                style: AppText.body2.copyWith(color: AppColor.black),
+                style: AppText.body2,
               ),
             ),
             TextButton.icon(
@@ -124,10 +124,10 @@ class PostItem extends StatelessWidget {
                   context: context,
                   isScrollControlled: true,
                   backgroundColor: Colors.transparent,
-                  transitionAnimationController: AnimationController(
-                    vsync: Navigator.of(context),
-                    duration: const Duration(milliseconds: 300),
-                  ),
+                  // transitionAnimationController: AnimationController(
+                  //   vsync: Navigator.of(context),
+                  //   duration: const Duration(milliseconds: 300),
+                  // ),
                   builder: (context) => const CommentBottomSheet(),
                 );
               },

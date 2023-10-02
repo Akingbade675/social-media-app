@@ -33,7 +33,7 @@ class ChatMeItem extends StatelessWidget {
                 ).copyWith(
                   topLeft: const Radius.circular(16),
                   topRight: !isPreviousChatMe
-                      ? const Radius.circular(0)
+                      ? const Radius.circular(4)
                       : const Radius.circular(16),
                 ),
               ),

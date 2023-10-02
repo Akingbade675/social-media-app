@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:social_media_app/components/app_text_field.dart';
+import 'package:social_media_app/components/user_avatar.dart';
 import 'package:social_media_app/cubit/app/app_cubit.dart';
 import 'package:social_media_app/cubit/auth/auth_cubit.dart';
 import 'package:social_media_app/cubit/post/create_post_cubit.dart';
@@ -118,220 +119,197 @@ class CreatePostModalSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
+    return Container(
       padding: const EdgeInsets.only(top: 38.0),
-      child: Container(
-        color: AppColor.grey,
-        // margin: EdgeInsets.only(top: 38),
-        child: Column(
-          children: [
-            Container(
-              padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 10),
-              decoration: BoxDecoration(
-                boxShadow: [
-                  BoxShadow(
-                    color: AppColor.black.withOpacity(0.1),
-                    blurRadius: 5,
-                    offset: const Offset(0, 2),
+      color: AppColor.white,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 10),
+            color: AppColor.white,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                IconButton(
+                  onPressed: () => Navigator.pop(context),
+                  icon: const Icon(Icons.close),
+                ),
+                Builder(builder: (context) {
+                  final state = context.watch<CreatePostCubit>().state;
+                  return TextButton(
+                    onPressed:
+                        (state is CreatingPostState && state.message.isNotEmpty)
+                            ? () => createPost(context)
+                            : null,
+                    style: TextButton.styleFrom(
+                      backgroundColor: AppColor.primaryDark,
+                      visualDensity: VisualDensity.comfortable,
+                      textStyle: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    child: const Text('Post',
+                        style: TextStyle(color: AppColor.white)),
+                  );
+                }),
+              ],
+            ),
+          ),
+          Divider(),
+          Expanded(
+            child: ListView(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(
+                    top: 15,
+                    left: 15,
                   ),
-                ],
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  IconButton(
-                    onPressed: () => Navigator.pop(context),
-                    icon: const Icon(Icons.close),
+                  child: Row(
+                    children: [
+                      const SizedBox(width: 10),
+                      const UserAvatar(size: 36, borderRadius: 8),
+                      const SizedBox(width: 10),
+                      Text(context.read<AuthenticationCubit>().getUser().name),
+                    ],
                   ),
-                  Builder(builder: (context) {
-                    final state = context.watch<CreatePostCubit>().state;
-                    return TextButton(
-                      onPressed: (state is CreatingPostState &&
-                              state.message.isNotEmpty)
-                          ? () => createPost(context)
-                          : null,
-                      style: TextButton.styleFrom(
-                        backgroundColor: AppColor.primaryDark,
-                        foregroundColor: AppColor.white,
-                        visualDensity: VisualDensity.comfortable,
-                        textStyle: const TextStyle(
-                          fontWeight: FontWeight.bold,
+                ),
+                TextField(
+                  maxLines: null,
+                  onChanged: (value) {
+                    context.read<CreatePostCubit>().changePostMsg(value);
+                  },
+                  decoration: const InputDecoration(
+                    border: InputBorder.none,
+                    hintText: 'What\'s on your mind?',
+                    // hintStyle: TextStyle(
+                    //   fontSize: 20,
+                    // ),
+                    contentPadding: EdgeInsets.all(15),
+                  ),
+                ),
+                Builder(builder: (context) {
+                  final state = context.watch<CreatePostCubit>().state;
+                  if (state is CreatingPostState && state.image.isNotEmpty) {
+                    return Container(
+                      height: 200,
+                      width: double.infinity,
+                      margin: const EdgeInsets.symmetric(
+                        vertical: 10,
+                        horizontal: 10,
+                      ),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(
+                          color: AppColor.grey,
+                          width: 1,
                         ),
                       ),
-                      child: const Text('Post'),
-                    );
-                  }),
-                ],
-              ),
-            ),
-            Expanded(
-              child: Material(
-                // color: AppColor.white.withOpacity(0.9),
-                child: Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 15,
-                        horizontal: 15,
-                      ),
-                      child: Row(
+                      child: Stack(
+                        fit: StackFit.expand,
                         children: [
-                          const SizedBox(width: 10),
-                          const CircleAvatar(
-                            radius: 20,
-                            backgroundImage:
-                                AssetImage('assets/temp/girl_3.jpg'),
-                          ),
-                          const SizedBox(width: 10),
-                          Text(context
-                              .read<AuthenticationCubit>()
-                              .getUser()
-                              .name),
-                        ],
-                      ),
-                    ),
-                    TextField(
-                      maxLines: null,
-                      expands: true,
-                      onChanged: (value) {
-                        context.read<CreatePostCubit>().changePostMsg(value);
-                      },
-                      decoration: const InputDecoration(
-                        border: InputBorder.none,
-                        hintText: 'What\'s on your mind?',
-                        // hintStyle: TextStyle(
-                        //   fontSize: 20,
-                        // ),
-                        contentPadding: EdgeInsets.zero,
-                      ),
-                    ),
-                    Builder(builder: (context) {
-                      final state = context.watch<CreatePostCubit>().state;
-                      if (state is CreatingPostState &&
-                          state.image.isNotEmpty) {
-                        return Container(
-                          height: 200,
-                          width: double.infinity,
-                          margin: const EdgeInsets.symmetric(
-                            vertical: 10,
-                            horizontal: 10,
-                          ),
-                          decoration: BoxDecoration(
+                          ClipRRect(
                             borderRadius: BorderRadius.circular(8),
-                            border: Border.all(
-                              color: AppColor.grey,
-                              width: 1,
+                            child: Image.file(
+                              File(state.image),
+                              fit: BoxFit.cover,
                             ),
                           ),
-                          child: Stack(
-                            fit: StackFit.expand,
+                          Row(
                             children: [
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(8),
-                                child: Image.file(
-                                  File(state.image),
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                              Row(
-                                children: [
-                                  TextButton.icon(
-                                    onPressed: () {
-                                      context
-                                          .read<CreatePostCubit>()
-                                          .pickImage(ImageSource.gallery);
-                                    },
-                                    icon: const Icon(Icons.edit_outlined),
-                                    label: const Text('Edit   '),
-                                    style: TextButton.styleFrom(
-                                      shape: const StadiumBorder(),
-                                      backgroundColor:
-                                          Colors.transparent.withOpacity(
-                                        0.5,
-                                      ),
-                                      foregroundColor: AppColor.white,
-                                      visualDensity: VisualDensity.compact,
-                                      padding: const EdgeInsets.symmetric(
-                                        vertical: 4,
-                                        horizontal: 8,
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(width: 6),
-                                  IconButton.filled(
-                                    onPressed: () {
-                                      context
-                                          .read<CreatePostCubit>()
-                                          .clearImage();
-                                    },
-                                    icon: const Icon(Icons.close),
-                                    style: TextButton.styleFrom(
-                                      shape: const StadiumBorder(),
-                                      backgroundColor:
-                                          Colors.transparent.withOpacity(
-                                        0.5,
-                                      ),
-                                      foregroundColor: AppColor.white,
-                                      visualDensity: VisualDensity.compact,
-                                      padding: const EdgeInsets.symmetric(
-                                        vertical: 4,
-                                        horizontal: 8,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        );
-                      }
-                      return const SizedBox();
-                    }),
-                  ],
-                ),
-              ),
-            ),
-            Container(
-              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
-              child: Builder(builder: (context) {
-                final state = context.watch<CreatePostCubit>().state;
-                return Row(
-                  children: [
-                    IconButton(
-                      onPressed:
-                          state is CreatingPostState && state.image.isNotEmpty
-                              ? null
-                              : () {
-                                  context
-                                      .read<CreatePostCubit>()
-                                      .pickImage(ImageSource.camera);
-                                },
-                      // disable camera button if image is already picked
-                      icon: const Icon(Icons.photo_camera),
-                      color: AppColor.black.withOpacity(0.7),
-                      visualDensity: VisualDensity.compact,
-                    ),
-                    IconButton(
-                      onPressed:
-                          state is CreatingPostState && state.image.isNotEmpty
-                              ? null
-                              : () {
+                              TextButton.icon(
+                                onPressed: () {
                                   context
                                       .read<CreatePostCubit>()
                                       .pickImage(ImageSource.gallery);
                                 },
-                      icon: const Icon(Icons.photo),
-                      color: AppColor.black.withOpacity(0.7),
-                      visualDensity: VisualDensity.compact,
-                    ),
-                  ],
-                );
-              }),
+                                icon: const Icon(Icons.edit_outlined, size: 20),
+                                label:
+                                    const Text('Edit   ', style: AppText.body2),
+                                style: TextButton.styleFrom(
+                                  shape: const StadiumBorder(),
+                                  backgroundColor:
+                                      Colors.transparent.withOpacity(
+                                    0.5,
+                                  ),
+                                  foregroundColor: AppColor.white,
+                                  visualDensity: VisualDensity.compact,
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 4,
+                                    horizontal: 8,
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 6),
+                              IconButton.filled(
+                                onPressed: () {
+                                  context.read<CreatePostCubit>().clearImage();
+                                },
+                                icon: const Icon(Icons.close),
+                                iconSize: 20,
+                                style: TextButton.styleFrom(
+                                  shape: const StadiumBorder(),
+                                  backgroundColor:
+                                      Colors.transparent.withOpacity(
+                                    0.5,
+                                  ),
+                                  foregroundColor: AppColor.white,
+                                  visualDensity: VisualDensity.compact,
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 4,
+                                    horizontal: 8,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    );
+                  }
+                  return const SizedBox();
+                }),
+              ],
             ),
-          ],
-        ),
+          ),
+          Container(
+            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
+            child: Builder(builder: (context) {
+              final state = context.watch<CreatePostCubit>().state;
+              return Row(
+                children: [
+                  IconButton(
+                    iconSize: 20,
+                    onPressed: _pickImageFrom(state, context,
+                        imageSource: ImageSource.camera),
+                    // disable camera button if image is already picked
+                    icon: const Icon(Icons.photo_camera),
+                    color: AppColor.black.withOpacity(0.7),
+                    visualDensity: VisualDensity.compact,
+                  ),
+                  IconButton(
+                    iconSize: 20,
+                    onPressed: _pickImageFrom(state, context,
+                        imageSource: ImageSource.gallery),
+                    icon: const Icon(Icons.photo),
+                    color: AppColor.black.withOpacity(0.7),
+                    visualDensity: VisualDensity.compact,
+                  ),
+                ],
+              );
+            }),
+          ),
+        ],
       ),
     );
+  }
+
+  void Function()? _pickImageFrom(CreatePostState state, BuildContext context,
+      {required ImageSource imageSource}) {
+    if (state is CreatingPostState && state.image.isNotEmpty) {
+      return null;
+    }
+    return () => context.read<CreatePostCubit>().pickImage(imageSource);
   }
 
   void createPost(BuildContext context) {
