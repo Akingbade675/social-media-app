@@ -29,9 +29,6 @@ class _CustomHomePageState extends State<CustomHomePage> {
   @override
   void initState() {
     super.initState();
-    SocketRepository.setInstance(context.read<AuthenticationCubit>());
-    SocketRepository.instance.initializeSocket();
-    context.read<VideoCallCubit>().init();
     // AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
     //   if (!isAllowed) {
     //     showDialog(
@@ -68,7 +65,7 @@ class _CustomHomePageState extends State<CustomHomePage> {
       if (internetConnection is InternetConnected &&
           currentScroll == maxScroll - 30) {
         // context.read<PostCubit>().getPost();
-        print('getting next posts');
+        print('getting next post');
       }
     });
     // context.read<PostBloc>().add(GetPost());

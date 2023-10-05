@@ -1,3 +1,4 @@
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -9,6 +10,8 @@ import 'package:social_media_app/config/app_routes.dart';
 import 'package:social_media_app/cubit/main_page/main_page_cubit.dart';
 import 'package:social_media_app/cubit/message/message_bloc.dart';
 import 'package:social_media_app/cubit/post/post_cubit.dart';
+import 'package:social_media_app/data/service/notification_service.dart';
+import 'package:social_media_app/data/service/overlay_service.dart';
 import 'package:social_media_app/pages/custom_home_page.dart';
 import 'package:social_media_app/pages/my_profile_page_copy.dart';
 import 'package:social_media_app/styles/app_colors.dart';
@@ -112,6 +115,36 @@ class _MainPageState extends State<MainPage> {
 
                 if (index == BottomNavigationItem.messages.index) {
                   Navigator.pushNamed(context, AppRoutes.chat);
+                  return;
+                }
+
+                if (index == BottomNavigationItem.favorites.index) {
+                  // NotificationService.showNotification(
+                  //   title: 'Incoming Call',
+                  //   body: 'Bhobo2 is calling...',
+                  //   category: NotificationCategory.Call,
+                  //   actionButtons: [
+                  //     NotificationActionButton(
+                  //       key: 'accept_call',
+                  //       label: 'ACCEPT',
+                  //       autoDismissible: true,
+                  //       color: Colors.purpleAccent,
+                  //       showInCompactView: true,
+                  //       icon: 'asset://assets/icons/call.png',
+                  //     ),
+                  //     NotificationActionButton(
+                  //       key: 'reject_call',
+                  //       label: 'REJECT',
+                  //       icon: 'asset://assets/icons/ic_add',
+                  //       autoDismissible: true,
+                  //       showInCompactView: true,
+                  //       isDangerousOption: true,
+                  //       color: Colors.red,
+                  //       // icon: 'assets/temp/girl_1.jpg',
+                  //     ),
+                  //   ],
+                  // );
+
                   return;
                 }
 

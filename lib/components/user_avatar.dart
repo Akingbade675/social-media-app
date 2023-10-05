@@ -21,7 +21,7 @@ class UserAvatar extends StatelessWidget {
           borderRadius: BorderRadius.circular(borderRadius),
         ),
         child: Image.asset(
-          'assets/temp/guy_4.jpg',
+          imageUrl ?? 'assets/temp/guy_4.jpg',
           width: size,
           height: size,
         ),

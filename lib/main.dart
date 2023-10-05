@@ -19,6 +19,8 @@ import 'package:social_media_app/cubit/post/post_cubit_copy.dart';
 import 'package:social_media_app/cubit/users/users_cubit.dart';
 import 'package:social_media_app/cubit/video_call/video_call_cubit.dart';
 import 'package:social_media_app/data/service/notification_service.dart';
+import 'package:social_media_app/data/service/overlay_service.dart';
+import 'package:social_media_app/repositories/socket_repo.dart';
 import 'package:social_media_app/repositories/user_repo.dart';
 import 'package:social_media_app/styles/app_colors.dart';
 
@@ -132,6 +134,10 @@ class _MyAppState extends State<MyApp> {
               body: LoadingBar(),
             );
           } else if (authState is AuthenticationAuthenticated) {
+            SocketRepository.setInstance(context.read<AuthenticationCubit>());
+            SocketRepository.instance.initializeSocket();
+            context.read<VideoCallCubit>().init();
+
             return AppRoutes.mainPage;
           } else {
             return AppRoutes.loginPage;
@@ -139,5 +145,11 @@ class _MyAppState extends State<MyApp> {
         }),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    SocketRepository.instance.close();
+    super.dispose();
   }
 }

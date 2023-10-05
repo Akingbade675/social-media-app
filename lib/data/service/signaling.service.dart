@@ -18,16 +18,14 @@ class Signaling {
 
   Signaling({required this.videoCallCubit});
 
-  void createRoom(
-      RTCVideoRenderer remoteRenderer, MediaStream? remoteStream) async {
-    videoCallCubit.setLocalStream(await _rtcRepository.getMediaStream());
-
+  void createRoom(RTCVideoRenderer remoteRenderer, MediaStream? remoteStream,
+      MediaStream localStream) async {
     _peerConnection = await _rtcRepository.createPeerConnections();
+    print('\n\n\n\nPEER CONNECTION ESTABLISHED\n\n\n\n');
 
     registerPeerConnectionListeners();
 
-    final localStream = videoCallCubit.getLocalStream();
-    localStream?.getTracks().forEach((track) {
+    localStream.getTracks().forEach((track) {
       _peerConnection?.addTrack(track, localStream);
     });
 
@@ -63,14 +61,17 @@ class Signaling {
     // Creating a room
     RTCSessionDescription offer = await _peerConnection!.createOffer();
 
+    print('\n\n\nOffer: ${offer.toMap()}\n\n\n');
+
     // TODO: Send this offer/SDP to peer
-    _socketRepository.send('outgoing:call', {
+    final payload = {
       'calleeId': '4',
-      'caller': videoCallCubit.state.user?.toJson(),
+      'caller': videoCallCubit.state.user,
       'roomId': videoCallCubit.state.roomId,
       'offer': offer.toMap(),
-    });
-    print('Offer: ${offer.toMap()}');
+    };
+    print(payload);
+    _socketRepository.send('outgoing:call', payload);
 
     _socketRepository.listen(
       'outgoing:call:ack',
@@ -89,7 +90,8 @@ class Signaling {
     };
   }
 
-  void joinRoom(String sessionDescription, String sessionType) async {
+  void joinRoom(String sessionDescription, String sessionType,
+      MediaStream localStream) async {
     _peerConnection = await _rtcRepository.createPeerConnections();
 
     registerPeerConnectionListeners();
@@ -108,9 +110,7 @@ class Signaling {
           sessionType,
         ));
 
-    _localStream = await _rtcRepository.getMediaStream();
-
-    _localStream?.getTracks().forEach((track) {
+    localStream.getTracks().forEach((track) {
       _peerConnection?.addTrack(track, _localStream!);
     });
 

@@ -156,7 +156,7 @@ class CreatePostModalSheet extends StatelessWidget {
               ],
             ),
           ),
-          Divider(),
+          const Divider(),
           Expanded(
             child: ListView(
               children: [
@@ -202,7 +202,7 @@ class CreatePostModalSheet extends StatelessWidget {
                         borderRadius: BorderRadius.circular(8),
                         border: Border.all(
                           color: AppColor.grey,
-                          width: 1,
+                          width: 2,
                         ),
                       ),
                       child: Stack(
@@ -215,53 +215,56 @@ class CreatePostModalSheet extends StatelessWidget {
                               fit: BoxFit.cover,
                             ),
                           ),
-                          Row(
-                            children: [
-                              TextButton.icon(
-                                onPressed: () {
-                                  context
-                                      .read<CreatePostCubit>()
-                                      .pickImage(ImageSource.gallery);
-                                },
-                                icon: const Icon(Icons.edit_outlined, size: 20),
-                                label:
-                                    const Text('Edit   ', style: AppText.body2),
-                                style: TextButton.styleFrom(
-                                  shape: const StadiumBorder(),
-                                  backgroundColor:
-                                      Colors.transparent.withOpacity(
-                                    0.5,
+                          Positioned(
+                            top: 4,
+                            right: 4,
+                            child: Row(
+                              children: [
+                                TextButton.icon(
+                                  onPressed: () {
+                                    context
+                                        .read<CreatePostCubit>()
+                                        .pickImage(ImageSource.gallery);
+                                  },
+                                  icon:
+                                      const Icon(Icons.edit_outlined, size: 18),
+                                  label: Text(
+                                    'Edit   ',
+                                    style: AppText.body2
+                                        .copyWith(color: AppColor.white),
                                   ),
-                                  foregroundColor: AppColor.white,
-                                  visualDensity: VisualDensity.compact,
-                                  padding: const EdgeInsets.symmetric(
-                                    vertical: 4,
-                                    horizontal: 8,
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(width: 6),
-                              IconButton.filled(
-                                onPressed: () {
-                                  context.read<CreatePostCubit>().clearImage();
-                                },
-                                icon: const Icon(Icons.close),
-                                iconSize: 20,
-                                style: TextButton.styleFrom(
-                                  shape: const StadiumBorder(),
-                                  backgroundColor:
-                                      Colors.transparent.withOpacity(
-                                    0.5,
-                                  ),
-                                  foregroundColor: AppColor.white,
-                                  visualDensity: VisualDensity.compact,
-                                  padding: const EdgeInsets.symmetric(
-                                    vertical: 4,
-                                    horizontal: 8,
+                                  style: TextButton.styleFrom(
+                                    shape: const StadiumBorder(),
+                                    backgroundColor:
+                                        Colors.transparent.withOpacity(
+                                      0.5,
+                                    ),
+                                    visualDensity: VisualDensity.compact,
+                                    padding: const EdgeInsets.all(4),
                                   ),
                                 ),
-                              ),
-                            ],
+                                const SizedBox(width: 6),
+                                IconButton.filled(
+                                  onPressed: () {
+                                    context
+                                        .read<CreatePostCubit>()
+                                        .clearImage();
+                                  },
+                                  icon: const Icon(Icons.close),
+                                  iconSize: 18,
+                                  style: TextButton.styleFrom(
+                                    shape: const StadiumBorder(),
+                                    backgroundColor:
+                                        Colors.transparent.withOpacity(
+                                      0.5,
+                                    ),
+                                    foregroundColor: AppColor.white,
+                                    visualDensity: VisualDensity.compact,
+                                    padding: const EdgeInsets.all(6),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ],
                       ),
