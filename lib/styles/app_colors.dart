@@ -13,4 +13,5 @@ class AppColor {
   static const black = Color(0xFF000000);
   static final fieldColor = const Color(0xFF9E9E9E).withOpacity(0.3);
   static final grey = Colors.grey.shade700;
+  static final greyOpaque = grey.withOpacity(0.3);
 }

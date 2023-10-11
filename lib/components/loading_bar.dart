@@ -7,31 +7,33 @@ class LoadingBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    // showDialog(context: context, builder: (context) => const LoadingBar());
     return SizedBox(
       height: size.height,
       width: size.width,
       child: Center(
-        child: Container(
-          height: 60,
-          width: 60,
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
+        child: SizedBox(
+          width: 100,
+          height: 100,
+          child: Material(
+            elevation: 2,
             color: AppColor.white,
-            borderRadius: BorderRadius.circular(12),
-            boxShadow: [
-              BoxShadow(
-                color: AppColor.grey.withOpacity(0.3),
-                spreadRadius: 1,
-                blurRadius: 2,
-                offset: const Offset(0, 2),
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+                side: BorderSide(
+                  color: AppColor.greyOpaque,
+                )),
+            child: const Center(
+              child: SizedBox(
+                height: 30,
+                width: 30,
+                child: CircularProgressIndicator(
+                  color: AppColor.primaryDark,
+                  valueColor: AlwaysStoppedAnimation(AppColor.primaryDark),
+                  strokeWidth: 2.0,
+                  strokeCap: StrokeCap.butt,
+                ),
               ),
-            ],
-          ),
-          child: const Center(
-            child: CircularProgressIndicator(
-              color: AppColor.primaryDark,
-              strokeWidth: 3.0,
-              strokeCap: StrokeCap.butt,
             ),
           ),
         ),

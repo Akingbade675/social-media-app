@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:like_button/like_button.dart';
 import 'package:social_media_app/components/comment_bottom_sheet.dart';
 import 'package:social_media_app/cubit/post/post_cubit.dart';
 import 'package:social_media_app/styles/app_colors.dart';
@@ -15,6 +16,7 @@ import 'package:social_media_app/styles/app_text_styles.dart';
 class PostItem extends StatelessWidget {
   final Post post;
   final bool isUserVisible;
+  final double relativePostion;
   final List<String> postImages = const [
     'assets/temp/Discover-Rottnest.png',
     'assets/temp/people.jpeg',
@@ -28,6 +30,7 @@ class PostItem extends StatelessWidget {
     this.post, {
     super.key,
     this.isUserVisible = true,
+    this.relativePostion = 0.0,
   });
 
   @override
@@ -47,10 +50,10 @@ class PostItem extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(post.owner?.name ?? '', style: AppText.subtitle3),
+                  Text(post.owner?.name ?? '', style: AppText.subtitle2),
                   Text(
                     timeago.format(post.createdAt),
-                    style: AppText.body2,
+                    style: AppText.body2.copyWith(color: AppColor.grey),
                   )
                 ],
               ),
@@ -74,6 +77,7 @@ class PostItem extends StatelessWidget {
                     // randomize post Images
                     postImages[Random().nextInt(postImages.length)],
                     fit: BoxFit.cover,
+                    alignment: Alignment(0, relativePostion),
                   ),
                 ),
               ),
@@ -86,34 +90,47 @@ class PostItem extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            TextButton.icon(
-              style: TextButton.styleFrom(
-                padding: EdgeInsets.zero,
-                visualDensity: VisualDensity.compact,
+            LikeButton(
+              size: 20,
+              circleColor: const CircleColor(
+                start: AppColor.secondaryDark,
+                end: AppColor.secondaryDark,
               ),
-              onPressed: () {
-                context.read<PostCubit>().likePost(post.id);
+              bubblesColor: const BubblesColor(
+                dotPrimaryColor: AppColor.secondaryDark,
+                dotSecondaryColor: AppColor.secondaryDark,
+              ),
+              isLiked: post.isLiked,
+              likeCountPadding: const EdgeInsets.only(left: 8),
+              likeBuilder: (bool isLiked) {
+                return isLiked
+                    ? SvgPicture.asset(
+                        AppIcons.icFavoriteFilled,
+                        colorFilter: const ColorFilter.mode(
+                          AppColor.secondaryDark,
+                          BlendMode.srcIn,
+                        ),
+                        width: 20,
+                        height: 20,
+                      )
+                    : SvgPicture.asset(
+                        AppIcons.icFavorite,
+                        colorFilter: ColorFilter.mode(
+                          AppColor.greyOpaque,
+                          BlendMode.srcIn,
+                        ),
+                        width: 20,
+                        height: 20,
+                      );
               },
-              icon: post.isLiked
-                  ? SvgPicture.asset(
-                      AppIcons.icFavoriteFilled,
-                      colorFilter: const ColorFilter.mode(
-                        AppColor.primaryDark,
-                        BlendMode.srcIn,
-                      ),
-                      width: 20,
-                      height: 20,
-                    )
-                  : SvgPicture.asset(
-                      AppIcons.icFavorite,
-                      width: 20,
-                      height: 20,
-                    ),
-              label: Text(
-                post.likesCount.toString(),
-                style: AppText.body2,
-              ),
+              likeCount: post.likesCount,
+              onTap: (isLiked) {
+                print('Liking post ${post.id}');
+                context.read<PostCubit>().likePost(post.id);
+                return Future.value(!isLiked);
+              },
             ),
+            const SizedBox(width: 8),
             TextButton.icon(
               style: TextButton.styleFrom(
                 padding: EdgeInsets.zero,
@@ -124,21 +141,25 @@ class PostItem extends StatelessWidget {
                   context: context,
                   isScrollControlled: true,
                   backgroundColor: Colors.transparent,
-                  // transitionAnimationController: AnimationController(
-                  //   vsync: Navigator.of(context),
-                  //   duration: const Duration(milliseconds: 300),
-                  // ),
+                  transitionAnimationController: AnimationController(
+                    vsync: Navigator.of(context),
+                    duration: const Duration(milliseconds: 300),
+                  ),
                   builder: (context) => const CommentBottomSheet(),
                 );
               },
               icon: SvgPicture.asset(
                 AppIcons.icMessage,
+                colorFilter: ColorFilter.mode(
+                  AppColor.greyOpaque,
+                  BlendMode.srcIn,
+                ),
                 width: 20,
                 height: 20,
               ),
               label: Text(
                 post.commentsCount.toString(),
-                style: AppText.body2.copyWith(color: AppColor.black),
+                style: AppText.body2.copyWith(color: AppColor.greyOpaque),
               ),
             ),
           ],
@@ -146,4 +167,30 @@ class PostItem extends StatelessWidget {
       ],
     );
   }
+
+//   Widget likeWidget(bool isLiked) {
+//     if (isLiked) {
+//       return Lottie.asset('assets/animations/like_animation.json',
+//           width: 20, height: 20);
+//       return SvgPicture.asset(
+//         AppIcons.icFavoriteFilled,
+//         colorFilter: const ColorFilter.mode(
+//           AppColor.secondaryDark,
+//           BlendMode.srcIn,
+//         ),
+//         width: 20,
+//         height: 20,
+//       );
+//     } else {
+//       return SvgPicture.asset(
+//         AppIcons.icFavorite,
+//         colorFilter: ColorFilter.mode(
+//           AppColor.grey,
+//           BlendMode.srcIn,
+//         ),
+//         width: 20,
+//         height: 20,
+//       );
+//     }
+//   }
 }

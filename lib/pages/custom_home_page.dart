@@ -6,6 +6,7 @@ import 'package:social_media_app/bloc/bloc/internet_bloc.dart';
 import 'package:social_media_app/components/persistent_divider.dart';
 import 'package:social_media_app/components/post_item.dart';
 import 'package:social_media_app/components/posts_loading_widget.dart';
+import 'package:social_media_app/components/scroll_animation_wrapper.dart';
 import 'package:social_media_app/config/app_icons.dart';
 import 'package:social_media_app/config/app_routes.dart';
 import 'package:social_media_app/cubit/auth/auth_cubit.dart';
@@ -122,7 +123,10 @@ class _CustomHomePageState extends State<CustomHomePage> {
                   if (state.isLoading != true) {
                     return SliverList(
                       delegate: SliverChildBuilderDelegate(
-                        (context, index) => PostItem(state.posts[index]),
+                        (context, index) => ScrollAnimationWrapper(
+                          controller: _scrollController,
+                          child: state.posts[index],
+                        ),
                         childCount: state.posts.length,
                       ),
                     );

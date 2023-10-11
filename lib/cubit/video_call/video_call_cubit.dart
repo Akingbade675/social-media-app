@@ -32,11 +32,11 @@ class VideoCallCubit extends Cubit<VideoCallState> {
 
         print('Incoming call: $data');
         emit(state.copyWith(
-          callStatus: CallStatus.ringing,
+          // callStatus: CallStatus.ringing,
           roomId: data['roomId'],
           friend: User.fromMap(data['caller']),
-          // sessionType: data['offer']['type'],
-          // sessionDescription: data['offer']['sdp'],
+          sessionType: data['offer']['type'],
+          sessionDescription: data['offer']['sdp'],
         ));
         // play ringing sound and show incoming call notification
         CallKitService.showIncomingCall(

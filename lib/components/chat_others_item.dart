@@ -19,7 +19,7 @@ class ChatOtherItem extends StatelessWidget {
       padding: EdgeInsets.only(
         right: 30,
         left: 16,
-        top: showProfile ? 20 : 6,
+        top: showProfile ? 20 : 4,
       ),
       child: ConstrainedBox(
         constraints: BoxConstraints(
@@ -43,68 +43,66 @@ class ChatOtherItem extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                Card(
-                  elevation: 1,
-                  margin: EdgeInsets.zero,
-                  color: AppColor.white,
-                  surfaceTintColor: AppColor.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: const BorderRadius.vertical(
-                      bottom: Radius.circular(16),
-                    ).copyWith(
-                      topRight: const Radius.circular(16),
-                      topLeft: showProfile
-                          ? const Radius.circular(4)
-                          : const Radius.circular(16),
+                IntrinsicWidth(
+                  child: Card(
+                    elevation: 1,
+                    margin: const EdgeInsets.only(bottom: 1),
+                    color: AppColor.white,
+                    surfaceTintColor: AppColor.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: const BorderRadius.vertical(
+                        bottom: Radius.circular(16),
+                      ).copyWith(
+                        topRight: const Radius.circular(16),
+                        topLeft: showProfile
+                            ? const Radius.circular(4)
+                            : const Radius.circular(16),
+                      ),
                     ),
-                  ),
-                  child: ConstrainedBox(
-                    constraints: BoxConstraints(
-                      maxWidth: MediaQuery.of(context).size.width * 0.7,
-                      minWidth: MediaQuery.of(context).size.width * 0.4,
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            chat.user.name,
-                            style: TextStyle(
-                              color: AppColor.grey,
-                              fontWeight: FontWeight.bold,
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(
+                        maxWidth: MediaQuery.of(context).size.width * 0.7,
+                        minWidth: MediaQuery.of(context).size.width * 0.4,
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0).copyWith(bottom: 4),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              chat.user.name,
+                              style: TextStyle(
+                                color: AppColor.grey,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 6),
-                          Text(chat.message),
-                          SizedBox(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                Text(
-                                  getLocalTime(chat.createdAt),
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    color: AppColor.grey,
-                                  ),
+                            const SizedBox(height: 6),
+                            Text(chat.message),
+                            Align(
+                              alignment: Alignment.bottomRight,
+                              child: Text(
+                                getLocalTime(chat.createdAt),
+                                style: TextStyle(
+                                  fontSize: 10,
+                                  color: AppColor.grey,
                                 ),
-                              ],
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   ),
                 ),
-                const SizedBox(height: 4),
-                Text(
-                  // get the time from the chat
-                  getLocalTime(chat.createdAt),
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: AppColor.grey,
-                  ),
-                ),
+                // const SizedBox(height: 4),
+                // Text(
+                //   // get the time from the chat
+                //   getLocalTime(chat.createdAt),
+                //   style: TextStyle(
+                //     fontSize: 12,
+                //     color: AppColor.grey,
+                //   ),
+                // ),
               ],
             ),
           ],

@@ -135,6 +135,9 @@ class CreatePostModalSheet extends StatelessWidget {
                   onPressed: () => Navigator.pop(context),
                   icon: const Icon(Icons.close),
                 ),
+                const SizedBox(width: 12),
+                const Text('Share Post', style: AppText.subtitle3),
+                const Spacer(),
                 Builder(builder: (context) {
                   final state = context.watch<CreatePostCubit>().state;
                   return TextButton(
@@ -143,8 +146,10 @@ class CreatePostModalSheet extends StatelessWidget {
                             ? () => createPost(context)
                             : null,
                     style: TextButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(horizontal: 18),
                       backgroundColor: AppColor.primaryDark,
                       visualDensity: VisualDensity.comfortable,
+                      disabledBackgroundColor: AppColor.grey.withOpacity(0.3),
                       textStyle: const TextStyle(
                         fontWeight: FontWeight.bold,
                       ),
@@ -156,7 +161,7 @@ class CreatePostModalSheet extends StatelessWidget {
               ],
             ),
           ),
-          const Divider(),
+          const Divider(height: 1),
           Expanded(
             child: ListView(
               children: [
@@ -188,93 +193,11 @@ class CreatePostModalSheet extends StatelessWidget {
                     contentPadding: EdgeInsets.all(15),
                   ),
                 ),
-                Builder(builder: (context) {
-                  final state = context.watch<CreatePostCubit>().state;
-                  if (state is CreatingPostState && state.image.isNotEmpty) {
-                    return Container(
-                      height: 200,
-                      width: double.infinity,
-                      margin: const EdgeInsets.symmetric(
-                        vertical: 10,
-                        horizontal: 10,
-                      ),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8),
-                        border: Border.all(
-                          color: AppColor.grey,
-                          width: 2,
-                        ),
-                      ),
-                      child: Stack(
-                        fit: StackFit.expand,
-                        children: [
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(8),
-                            child: Image.file(
-                              File(state.image),
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                          Positioned(
-                            top: 4,
-                            right: 4,
-                            child: Row(
-                              children: [
-                                TextButton.icon(
-                                  onPressed: () {
-                                    context
-                                        .read<CreatePostCubit>()
-                                        .pickImage(ImageSource.gallery);
-                                  },
-                                  icon:
-                                      const Icon(Icons.edit_outlined, size: 18),
-                                  label: Text(
-                                    'Edit   ',
-                                    style: AppText.body2
-                                        .copyWith(color: AppColor.white),
-                                  ),
-                                  style: TextButton.styleFrom(
-                                    shape: const StadiumBorder(),
-                                    backgroundColor:
-                                        Colors.transparent.withOpacity(
-                                      0.5,
-                                    ),
-                                    visualDensity: VisualDensity.compact,
-                                    padding: const EdgeInsets.all(4),
-                                  ),
-                                ),
-                                const SizedBox(width: 6),
-                                IconButton.filled(
-                                  onPressed: () {
-                                    context
-                                        .read<CreatePostCubit>()
-                                        .clearImage();
-                                  },
-                                  icon: const Icon(Icons.close),
-                                  iconSize: 18,
-                                  style: TextButton.styleFrom(
-                                    shape: const StadiumBorder(),
-                                    backgroundColor:
-                                        Colors.transparent.withOpacity(
-                                      0.5,
-                                    ),
-                                    foregroundColor: AppColor.white,
-                                    visualDensity: VisualDensity.compact,
-                                    padding: const EdgeInsets.all(6),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    );
-                  }
-                  return const SizedBox();
-                }),
+                const PickedImageContainer(),
               ],
             ),
           ),
+          const Divider(height: 1),
           Container(
             padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
             child: Builder(builder: (context) {
@@ -282,7 +205,7 @@ class CreatePostModalSheet extends StatelessWidget {
               return Row(
                 children: [
                   IconButton(
-                    iconSize: 20,
+                    iconSize: 24,
                     onPressed: _pickImageFrom(state, context,
                         imageSource: ImageSource.camera),
                     // disable camera button if image is already picked
@@ -291,7 +214,7 @@ class CreatePostModalSheet extends StatelessWidget {
                     visualDensity: VisualDensity.compact,
                   ),
                   IconButton(
-                    iconSize: 20,
+                    iconSize: 24,
                     onPressed: _pickImageFrom(state, context,
                         imageSource: ImageSource.gallery),
                     icon: const Icon(Icons.photo),
@@ -320,5 +243,99 @@ class CreatePostModalSheet extends StatelessWidget {
     context.read<CreatePostCubit>().createPost(token).then((value) {
       Navigator.of(context).pop();
     });
+  }
+}
+
+class PickedImageContainer extends StatelessWidget {
+  const PickedImageContainer({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final state = context.watch<CreatePostCubit>().state;
+    if (state is CreatingPostState && state.image.isNotEmpty) {
+      return Container(
+        height: 200,
+        width: double.infinity,
+        margin: const EdgeInsets.symmetric(
+          vertical: 10,
+          horizontal: 10,
+        ),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(
+            color: AppColor.grey.withOpacity(0.3),
+            width: 1,
+          ),
+        ),
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(8),
+              child: Image.file(
+                File(state.image),
+                fit: BoxFit.cover,
+              ),
+            ),
+            Positioned(
+              top: 4,
+              right: 4,
+              child: Row(
+                children: [
+                  TextButton.icon(
+                    onPressed: () {
+                      context
+                          .read<CreatePostCubit>()
+                          .pickImage(ImageSource.gallery);
+                    },
+                    icon: const Icon(
+                      Icons.edit_outlined,
+                      size: 18,
+                      color: AppColor.white,
+                    ),
+                    label: Text(
+                      'Edit   ',
+                      style: AppText.body2.copyWith(
+                        color: AppColor.white,
+                      ),
+                    ),
+                    style: TextButton.styleFrom(
+                      shape: const StadiumBorder(),
+                      backgroundColor: Colors.transparent.withOpacity(
+                        0.5,
+                      ),
+                      visualDensity: VisualDensity.compact,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 6,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 6),
+                  IconButton.filled(
+                    onPressed: () {
+                      context.read<CreatePostCubit>().clearImage();
+                    },
+                    icon: const Icon(Icons.close),
+                    iconSize: 18,
+                    style: TextButton.styleFrom(
+                      shape: const StadiumBorder(),
+                      backgroundColor: Colors.transparent.withOpacity(
+                        0.5,
+                      ),
+                      foregroundColor: AppColor.white,
+                      visualDensity: VisualDensity.compact,
+                      padding: const EdgeInsets.all(6),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+    return const SizedBox();
   }
 }

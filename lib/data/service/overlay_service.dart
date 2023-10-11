@@ -57,7 +57,7 @@ class CallKitService {
       nameCaller: callerName,
       avatar: 'https://i.pravatar.cc/150?img=3',
       type: 1,
-      duration: 60,
+      duration: 100,
       missedCallNotification: const NotificationParams(
         showNotification: true,
         isShowCallback: true,

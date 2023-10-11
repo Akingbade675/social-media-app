@@ -1,20 +1,13 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:social_media_app/config/app_config.dart';
 
 part 'main_page_state.dart';
 
-class MainPageCubit extends Cubit<MainPageState> {
-  MainPageCubit() : super(const MainPageInitial(currentIndex: 0));
+class MainPageCubit extends Cubit<BottomNavigationItem> {
+  MainPageCubit() : super(BottomNavigationItem.home);
 
-  void tabChange(int index) {
-    emit(MainPageInitial(currentIndex: index));
-  }
-
-  void hideBottomNavBar() {
-    emit(const MainPageInitial(currentIndex: -1));
-  }
-
-  void showBottomNavBar() {
-    emit(const MainPageInitial(currentIndex: 0));
+  void tabChange(BottomNavigationItem itemIndex) {
+    emit(itemIndex);
   }
 }

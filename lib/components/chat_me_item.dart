@@ -15,7 +15,7 @@ class ChatMeItem extends StatelessWidget {
       padding: EdgeInsets.only(
         right: 16,
         left: 30,
-        top: isPreviousChatMe ? 6 : 20,
+        top: isPreviousChatMe ? 4 : 4,
       ),
       child: Align(
         alignment: Alignment.centerRight,
@@ -24,7 +24,7 @@ class ChatMeItem extends StatelessWidget {
           children: [
             Card(
               elevation: 1,
-              margin: EdgeInsets.zero,
+              margin: const EdgeInsets.only(bottom: 1),
               color: AppColor.primaryLight,
               surfaceTintColor: AppColor.primaryLight,
               shape: RoundedRectangleBorder(
@@ -42,29 +42,28 @@ class ChatMeItem extends StatelessWidget {
                   maxWidth: MediaQuery.of(context).size.width * 0.7,
                   minWidth: MediaQuery.of(context).size.width * 0.4,
                 ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0).copyWith(bottom: 2),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Text(
                         chat.message,
                         style: const TextStyle(
                           color: AppColor.black,
                         ),
                       ),
-                    ),
-                  ],
+                      Text(
+                        // get the time from the chat
+                        getLocalTime(chat.createdAt),
+                        style: TextStyle(
+                          fontSize: 10,
+                          color: AppColor.grey,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ),
-            const SizedBox(height: 4),
-            Text(
-              // get the time from the chat
-              getLocalTime(chat.createdAt),
-              style: TextStyle(
-                fontSize: 12,
-                color: AppColor.grey,
               ),
             ),
           ],

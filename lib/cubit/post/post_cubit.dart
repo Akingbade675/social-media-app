@@ -21,21 +21,24 @@ class PostCubit extends HydratedCubit<PostState> {
   }
 
   likePost(String postId) async {
-    await LikePostService(postId: postId, token: authenticationCubit.getToken())
-        .call();
-    final posts = await GetPostService(authenticationCubit.getToken()).call();
-    print('POSTS - $posts');
-    emit(PostGetSuccessful(posts: posts));
-
-    // final posts = (state as PostGetSuccessful).posts;
-    // final likedPostIndex = posts.indexWhere((post) => post.id == postId);
-    // final likedPost = posts[likedPostIndex];
-    // posts[likedPostIndex] = likedPost.copyWith(
-    //   isLiked: true,
-    //   likesCount: likedPost.likesCount + 1,
-    // );
-
+    final posts = (state as PostGetSuccessful).posts;
+    emit(PostLikeChanged(postId: postId, isLiked: true));
+    // await LikePostService(
+    //   postId: postId,
+    // token: authenticationCubit.getToken(),
+    // ).call();
+    // final posts = await GetPostService(authenticationCubit.getToken()).call();
+    // print('POSTS - $posts');
     // emit(PostGetSuccessful(posts: posts));
+
+    final likedPostIndex = posts.indexWhere((post) => post.id == postId);
+    final likedPost = posts[likedPostIndex];
+    posts[likedPostIndex] = likedPost.copyWith(
+      isLiked: true,
+      likesCount: likedPost.likesCount + 1,
+    );
+
+    emit(PostGetSuccessful(posts: posts));
   }
 
   // unlikePost(String postId) async {

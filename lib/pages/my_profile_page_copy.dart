@@ -24,7 +24,7 @@ class CustomProfilePage extends StatefulWidget {
 }
 
 class _CustomProfilePageState extends State<CustomProfilePage>
-    with SingleTickerProviderStateMixin {
+    with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
@@ -74,6 +74,7 @@ class _CustomProfilePageState extends State<CustomProfilePage>
         SliverToBoxAdapter(
           child: Column(
             children: [
+              const SizedBox(height: 12),
               const UserAvatar(),
               const SizedBox(height: 12),
               Text(
@@ -142,12 +143,12 @@ class _CustomProfilePageState extends State<CustomProfilePage>
                 );
               }
 
-              return SliverList(
-                delegate: SliverChildBuilderDelegate(
-                  (context, index) =>
-                      const PostLoadingListItem(isUserVisible: false),
-                  childCount: 4,
-                ),
+              return SliverList.separated(
+                separatorBuilder: (context, index) =>
+                    const SizedBox(height: 12),
+                itemCount: 4,
+                itemBuilder: (context, index) =>
+                    const PostLoadingListItem(isUserVisible: false),
               );
             },
           ),
@@ -173,7 +174,7 @@ class ProfileCounts extends StatelessWidget {
       children: [
         Text(
           count.toString(),
-          style: AppText.header2,
+          style: AppText.subtitle2,
         ),
         Text(title),
       ],

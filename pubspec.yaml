@@ -57,6 +57,11 @@ dependencies:
     awesome_notifications: ^0.7.7
     flutter_callkit_incoming: ^2.0.0+2
     device_info_plus: ^9.0.3
+    flutter_background_service: ^5.0.1
+    chatview: ^1.3.1
+    google_maps_flutter: ^2.5.0
+    lottie: ^2.6.0
+    like_button: ^2.0.5
 
 dev_dependencies:
     flutter_test:
@@ -83,6 +88,8 @@ flutter:
     assets:
         - assets/temp/
         - assets/icons/
+        - assets/animations/
+        - assets/images/
 
     # An image asset can refer to one or more resolution-specific "variants", see
     # https://flutter.dev/assets-and-images/#resolution-aware

@@ -21,9 +21,8 @@ class AuthenticationCubit extends Cubit<AuthenticationState> {
   }
 
   void appStarted() async {
-    final bool hasToken = await userRepository.hasToken();
-    if (hasToken) {
-      final String token = await userRepository.getToken();
+    final String token = await userRepository.getToken();
+    if (token.isNotEmpty) {
       final User user = await userRepository.getUser();
       emit(AuthenticationAuthenticated(token: token, user: user));
     } else {

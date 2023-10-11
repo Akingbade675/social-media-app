@@ -16,12 +16,12 @@ class CommentBottomSheet extends StatelessWidget {
       canPop: context.read<EmojiKeyboardCubit>().willPopScope(),
       child: DraggableScrollableSheet(
         initialChildSize: 0.5,
-        maxChildSize: 1,
-        minChildSize: 0.4,
-        snap: true,
-        snapSizes: const [0.4, 0.5, 1],
+        maxChildSize: 0.95,
+        minChildSize: 0.35,
         builder: (_, controller) {
           return Container(
+            margin:
+                EdgeInsets.only(top: MediaQuery.of(context).viewPadding.top),
             decoration: const BoxDecoration(
               color: AppColor.white,
               borderRadius: BorderRadius.vertical(
@@ -30,51 +30,13 @@ class CommentBottomSheet extends StatelessWidget {
             ),
             child: Column(
               children: [
-                Container(
-                  height: 4,
-                  width: 40,
-                  margin: const EdgeInsets.only(top: 10),
-                  decoration: BoxDecoration(
-                    color: AppColor.grey.withOpacity(0.3),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      RichText(
-                        text: TextSpan(
-                          children: [
-                            TextSpan(
-                              text: 'Comments',
-                              style: AppText.subtitle1
-                                  .copyWith(color: AppColor.black),
-                            ),
-                            TextSpan(
-                              text: ' (10)',
-                              style: AppText.subtitle2
-                                  .copyWith(color: AppColor.black),
-                            ),
-                          ],
-                        ),
-                      ),
-                      IconButton(
-                        visualDensity: VisualDensity.compact,
-                        onPressed: () => Navigator.pop(context),
-                        icon: const Icon(Icons.close),
-                      ),
-                    ],
-                  ),
-                ),
-                Divider(color: AppColor.grey.withOpacity(0.3)),
+                CommentHeader(scrollController: controller),
                 Expanded(
                   child: ListView.separated(
                     // shrinkWrap: true,
                     itemCount: 10,
                     separatorBuilder: (context, index) =>
-                        const SizedBox(height: 10),
+                        const SizedBox(height: 0),
                     itemBuilder: (context, index) {
                       return ListTile(
                         // titleAlignment: ListTileTitleAlignment.center,
@@ -114,6 +76,7 @@ class CommentBottomSheet extends StatelessWidget {
                     },
                   ),
                 ),
+                Divider(color: AppColor.greyOpaque),
                 InputBottom(
                   onButtonPressed: () {},
                   controller: TextEditingController(),
@@ -122,6 +85,70 @@ class CommentBottomSheet extends StatelessWidget {
             ),
           );
         },
+      ),
+    );
+  }
+}
+
+class CommentHeader extends StatelessWidget {
+  final ScrollController scrollController;
+
+  const CommentHeader({
+    super.key,
+    required this.scrollController,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      controller: scrollController,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          // Container(
+          //   height: 4,
+          //   width: 40,
+          //   margin: const EdgeInsets.only(top: 10),
+          //   decoration: BoxDecoration(
+          //     color: AppColor.grey.withOpacity(0.3),
+          //     borderRadius: BorderRadius.circular(10),
+          //   ),
+          // ),
+          SizedBox(
+            width: 40,
+            child: Divider(color: AppColor.greyOpaque, thickness: 3),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                RichText(
+                  text: TextSpan(
+                    children: [
+                      TextSpan(
+                        text: 'Comments',
+                        style:
+                            AppText.subtitle1.copyWith(color: AppColor.black),
+                      ),
+                      TextSpan(
+                        text: ' (10)',
+                        style:
+                            AppText.subtitle2.copyWith(color: AppColor.black),
+                      ),
+                    ],
+                  ),
+                ),
+                IconButton(
+                  visualDensity: VisualDensity.compact,
+                  onPressed: () => Navigator.pop(context),
+                  icon: const Icon(Icons.close),
+                ),
+              ],
+            ),
+          ),
+          Divider(color: AppColor.greyOpaque),
+        ],
       ),
     );
   }

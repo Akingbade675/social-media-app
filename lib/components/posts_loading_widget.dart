@@ -79,30 +79,30 @@ class PostLoadingListItem extends StatelessWidget {
         const ColoredContainer(
           width: double.infinity,
           height: 16,
-          radius: 10,
+          radius: 5,
         ),
-        const SizedBox(height: 12),
+        const SizedBox(height: 8),
         const ColoredContainer(
           width: 230,
           height: 16,
-          radius: 10,
+          radius: 5,
         ),
         const SizedBox(height: 14),
         const Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             ColoredContainer(
-              width: 40,
+              width: 36,
               height: 20,
-              radius: 5,
+              radius: 12,
             ),
             SizedBox(
               width: 16,
             ),
             ColoredContainer(
-              width: 40,
+              width: 36,
               height: 20,
-              radius: 5,
+              radius: 12,
             ),
           ],
         )

@@ -19,7 +19,6 @@ import 'package:social_media_app/cubit/post/post_cubit_copy.dart';
 import 'package:social_media_app/cubit/users/users_cubit.dart';
 import 'package:social_media_app/cubit/video_call/video_call_cubit.dart';
 import 'package:social_media_app/data/service/notification_service.dart';
-import 'package:social_media_app/data/service/overlay_service.dart';
 import 'package:social_media_app/repositories/socket_repo.dart';
 import 'package:social_media_app/repositories/user_repo.dart';
 import 'package:social_media_app/styles/app_colors.dart';
@@ -34,7 +33,6 @@ void main() async {
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
     statusBarColor: Colors.transparent,
     statusBarIconBrightness: Brightness.dark,
-    statusBarBrightness: Brightness.dark,
   ));
 
   await NotificationService.initializeNotification();
@@ -127,22 +125,24 @@ class _MyAppState extends State<MyApp> {
       routes: AppRoutes.pages,
       home: GestureDetector(
         onTap: () => FocusScope.of(context).unfocus(),
-        child: Builder(builder: (context) {
-          final authState = context.watch<AuthenticationCubit>().state;
-          if (authState is AuthenticationUnintialized) {
-            return const Scaffold(
-              body: LoadingBar(),
-            );
-          } else if (authState is AuthenticationAuthenticated) {
-            SocketRepository.setInstance(context.read<AuthenticationCubit>());
-            SocketRepository.instance.initializeSocket();
-            context.read<VideoCallCubit>().init();
+        child: Builder(
+          builder: (context) {
+            final authState = context.watch<AuthenticationCubit>().state;
+            if (authState is AuthenticationUnintialized) {
+              return const Scaffold(
+                body: LoadingBar(),
+              );
+            } else if (authState is AuthenticationAuthenticated) {
+              SocketRepository.setInstance(context.read<AuthenticationCubit>());
+              SocketRepository.instance.initializeSocket();
+              context.read<VideoCallCubit>().init();
 
-            return AppRoutes.mainPage;
-          } else {
-            return AppRoutes.loginPage;
-          }
-        }),
+              return AppRoutes.mainPage;
+            } else {
+              return AppRoutes.loginPage;
+            }
+          },
+        ),
       ),
     );
   }

@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 part of 'post_cubit.dart';
 
 @immutable
@@ -11,6 +12,26 @@ sealed class PostActionState extends PostState {}
 final class ScrollToTop extends PostActionState {}
 
 final class PostInitial extends PostState {}
+
+final class PostLikeChanged extends PostState {
+  final String postId;
+  final bool isLiked;
+
+  PostLikeChanged({required this.postId, required this.isLiked});
+
+  @override
+  List<Object?> get props => [postId, isLiked];
+
+  PostLikeChanged copyWith({
+    String? postId,
+    bool? isLiked,
+  }) {
+    return PostLikeChanged(
+      postId: postId ?? this.postId,
+      isLiked: isLiked ?? this.isLiked,
+    );
+  }
+}
 
 final class PostGetSuccessful extends PostState {
   final List<Post> posts;

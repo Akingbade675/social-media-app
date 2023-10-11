@@ -4,3 +4,5 @@ class AppConfig {
   // static const ipAddress = '10.0.2.2';
   // static const ipAddress = 'localhost';
 }
+
+enum BottomNavigationItem { home, favorites, add, messages, profile }

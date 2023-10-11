@@ -9,4 +9,5 @@ class AppIcons {
   static const icProfile = 'assets/icons/ic_profile.svg';
   static const icLocation = 'assets/icons/ic_location.svg';
   static const icAdd = 'assets/icons/ic_add.svg';
+  static const icAddOutline = 'assets/icons/ic_add_outline.svg';
 }
