@@ -27,7 +27,7 @@ class SocketClient {
       socket?.send(['Client ${socket?.id} just connected!']);
       socket?.emit('message', {"roomId": "1452761781910", "userId": "4"});
     });
-    socket?.onConnectError((data) => print('SOCKET TIMEOUT - $data'));
+    socket?.onConnectError((data) => print('SOCKET Error - $data'));
     socket?.onConnectTimeout((data) => print('SOCKET TIMEOUT - $data'));
     socket?.onDisconnect((_) => print('disconnect'));
   }

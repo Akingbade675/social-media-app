@@ -13,101 +13,96 @@ class CommentBottomSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return PopScope(
-      canPop: context.read<EmojiKeyboardCubit>().willPopScope(),
-      child: DraggableScrollableSheet(
-        initialChildSize: 0.5,
-        maxChildSize: 0.95,
-        minChildSize: 0.35,
-        snap: true,
-        snapSizes: const [0.95, 0.5, 0.35],
-        builder: (_, controller) {
-          return Container(
-            margin:
-                EdgeInsets.only(top: MediaQuery.of(context).viewPadding.top),
-            decoration: const BoxDecoration(
-              color: AppColor.white,
-              borderRadius: BorderRadius.vertical(
-                top: Radius.circular(20),
-              ),
+    return DraggableScrollableSheet(
+      initialChildSize: 0.5,
+      maxChildSize: 0.95,
+      minChildSize: 0.35,
+      snap: true,
+      snapSizes: const [0.95, 0.5, 0.35],
+      builder: (_, controller) {
+        return Container(
+          margin: EdgeInsets.only(top: MediaQuery.of(context).viewPadding.top),
+          decoration: const BoxDecoration(
+            color: AppColor.white,
+            borderRadius: BorderRadius.vertical(
+              top: Radius.circular(20),
             ),
-            child: Column(
-              children: [
-                CommentHeader(scrollController: controller),
-                Expanded(
-                  child: ListView.separated(
-                    // shrinkWrap: true,
-                    itemCount: 10,
-                    separatorBuilder: (context, index) =>
-                        const SizedBox(height: 0),
-                    itemBuilder: (context, index) {
-                      return ListTile(
-                        // titleAlignment: ListTileTitleAlignment.center,
-                        minVerticalPadding: 0,
-                        dense: false,
-                        // visualDensity: VisualDensity.compact,
-                        leading: UserAvatar(
-                          borderRadius: 4,
-                          size: 25,
-                          imageUrl:
-                              'assets/temp/girl_${Random().nextInt(5) + 1}.jpg',
-                        ),
-                        title: RichText(
-                          text: TextSpan(
-                            children: [
-                              TextSpan(
-                                text: 'Bhobo',
-                                style: TextStyle(
-                                  color: AppColor.grey,
-                                  fontSize: 12,
-                                ),
-                              ),
-                              TextSpan(
-                                text: ' - ${5 * index + 1} mins ago',
-                                style: TextStyle(
-                                  color: AppColor.greyOpaque,
-                                  fontSize: 12,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        subtitleTextStyle: AppText.body2,
-                        subtitle: const Text(
-                            'This is a comment from Bhobo on this post.'),
-                      );
-                    },
-                  ),
-                ),
-                Divider(color: AppColor.greyOpaque, height: 1),
-                Row(
-                  children: [
-                    const UserAvatar(
-                      size: 25,
-                      borderRadius: 4,
-                    ),
-                    const SizedBox(width: 6),
-                    Expanded(
-                      child: TextButton(
-                        onPressed: () {},
-                        style: TextButton.styleFrom(
-                          backgroundColor: AppColor.fieldColor,
-                          alignment: Alignment.centerLeft,
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 8, horizontal: 6),
-                          textStyle:
-                              AppText.body2.copyWith(color: AppColor.grey),
-                        ),
-                        child: const Text('Add a comment'),
+          ),
+          child: Column(
+            children: [
+              CommentHeader(scrollController: controller),
+              Expanded(
+                child: ListView.separated(
+                  // shrinkWrap: true,
+                  itemCount: 10,
+                  separatorBuilder: (context, index) =>
+                      const SizedBox(height: 0),
+                  itemBuilder: (context, index) {
+                    return ListTile(
+                      // titleAlignment: ListTileTitleAlignment.center,
+                      minVerticalPadding: 0,
+                      dense: false,
+                      // visualDensity: VisualDensity.compact,
+                      leading: UserAvatar(
+                        borderRadius: 4,
+                        size: 25,
+                        imageUrl:
+                            'assets/temp/girl_${Random().nextInt(5) + 1}.jpg',
                       ),
-                    ),
-                  ],
+                      title: RichText(
+                        text: TextSpan(
+                          children: [
+                            TextSpan(
+                              text: 'Bhobo',
+                              style: TextStyle(
+                                color: AppColor.grey,
+                                fontSize: 12,
+                              ),
+                            ),
+                            TextSpan(
+                              text: ' - ${5 * index + 1} mins ago',
+                              style: TextStyle(
+                                color: AppColor.greyOpaque,
+                                fontSize: 12,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      subtitleTextStyle: AppText.body2,
+                      subtitle: const Text(
+                          'This is a comment from Bhobo on this post.'),
+                    );
+                  },
                 ),
-              ],
-            ),
-          );
-        },
-      ),
+              ),
+              Divider(color: AppColor.greyOpaque, height: 1),
+              Row(
+                children: [
+                  const UserAvatar(
+                    size: 25,
+                    borderRadius: 4,
+                  ),
+                  const SizedBox(width: 6),
+                  Expanded(
+                    child: TextButton(
+                      onPressed: () {},
+                      style: TextButton.styleFrom(
+                        backgroundColor: AppColor.fieldColor,
+                        alignment: Alignment.centerLeft,
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 8, horizontal: 6),
+                        textStyle: AppText.body2.copyWith(color: AppColor.grey),
+                      ),
+                      child: const Text('Add a comment'),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }
