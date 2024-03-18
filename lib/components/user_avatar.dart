@@ -1,5 +1,6 @@
 // import 'package:cloudinary_public/cloudinary_public.dart';
 import 'package:flutter/material.dart';
+import 'package:social_media_app/styles/app_colors.dart';
 
 class UserAvatar extends StatelessWidget {
   final double size;
@@ -17,7 +18,7 @@ class UserAvatar extends StatelessWidget {
         width: size,
         height: size,
         decoration: BoxDecoration(
-          color: Colors.grey[300],
+          color: AppColor.greyOpaque,
           borderRadius: BorderRadius.circular(borderRadius),
         ),
         child: Image.asset(

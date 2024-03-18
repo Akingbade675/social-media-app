@@ -1,42 +1,37 @@
-import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:social_media_app/cubit/auth/auth_cubit.dart';
 import 'package:social_media_app/data/model/user.dart';
-import 'package:social_media_app/data/service/notification_service.dart';
 import 'package:social_media_app/data/service/overlay_service.dart';
 import 'package:social_media_app/data/service/signaling.service.dart';
 import 'package:social_media_app/repositories/socket_repo.dart';
-import 'package:social_media_app/styles/app_colors.dart';
 
 part 'video_call_state.dart';
 
 class VideoCallCubit extends Cubit<VideoCallState> {
   final AuthenticationCubit authCubit;
   late Signaling signaling;
-  late SocketRepository socketRepo;
 
   VideoCallCubit({required this.authCubit}) : super(const VideoCallState());
 
   void init() {
-    socketRepo = SocketRepository.instance;
+    SocketClient socketClient = SocketClient.instance();
     final user = authCubit.getUser();
     // emit(state.copyWith(user: authCubit.getUser()));
     signaling = Signaling(videoCallCubit: this);
-    socketRepo.listen('incoming:call', (data) {
+    socketClient.listen('incoming:call', (data) {
       print('Incoming call ${user.id}: $data');
       if (data['calleeId'] == user.id) {
-        socketRepo.send('incoming:call:ack', {'roomId': data['roomId']});
+        socketClient.send('incoming:call:ack', {'roomId': data['roomId']});
 
         print('Incoming call: $data');
         emit(state.copyWith(
           // callStatus: CallStatus.ringing,
           roomId: data['roomId'],
           friend: User.fromMap(data['caller']),
-          sessionType: data['offer']['type'],
-          sessionDescription: data['offer']['sdp'],
+          // sessionType: data['offer']['type'],
+          // sessionDescription: data['offer']['sdp'],
         ));
         // play ringing sound and show incoming call notification
         CallKitService.showIncomingCall(

@@ -75,74 +75,71 @@ class _CustomHomePageState extends State<CustomHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: BlocListener<CreatePostCubit, CreatePostState>(
-        listener: (context, state) {
-          if (state is PostCreated) {
-            context.read<PostBloc>().add(GetPost());
-          }
-        },
-        child: CustomScrollView(
-          slivers: [
-            SliverAppBar(
-              title: const Text('Social Media App'),
-              backgroundColor: AppColor.white,
-              surfaceTintColor: AppColor.white,
-              floating: true,
-              actions: [
-                IconButton(
-                  onPressed: () {
-                    Navigator.of(context).pushNamed(AppRoutes.nearby);
-                  },
-                  icon: SvgPicture.asset(
-                    AppIcons.icLocation,
-                    width: 24,
-                    height: 24,
-                    colorFilter: const ColorFilter.mode(
-                      AppColor.black,
-                      BlendMode.srcIn,
-                    ),
+    return BlocListener<CreatePostCubit, CreatePostState>(
+      listener: (context, state) {
+        if (state is PostCreated) {
+          context.read<PostBloc>().add(GetPost());
+        }
+      },
+      child: CustomScrollView(
+        slivers: [
+          SliverAppBar(
+            title: const Text('Social Media App'),
+            backgroundColor: AppColor.white,
+            surfaceTintColor: AppColor.white,
+            floating: true,
+            actions: [
+              IconButton(
+                onPressed: () {
+                  Navigator.of(context).pushNamed(AppRoutes.nearby);
+                },
+                icon: SvgPicture.asset(
+                  AppIcons.icLocation,
+                  width: 24,
+                  height: 24,
+                  colorFilter: const ColorFilter.mode(
+                    AppColor.black,
+                    BlendMode.srcIn,
                   ),
                 ),
-              ],
-            ),
-            const PersistentDividerHeader(),
-            SliverPadding(
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-              sliver: BlocConsumer<PostBloc, PostState>(
-                listener: (context, state) {
-                  // if (state is ScrollToTop) {
-                  //   _scrollController.animateTo(
-                  //     0,
-                  //     duration: const Duration(milliseconds: 300),
-                  //     curve: Curves.easeInOut,
-                  //   );
-                  // }
-                },
-                builder: (context, state) {
-                  if (state.isLoading != true) {
-                    return SliverList(
-                      delegate: SliverChildBuilderDelegate(
-                        (context, index) => ScrollAnimationWrapper(
-                          controller: _scrollController,
-                          child: state.posts[index],
-                        ),
-                        childCount: state.posts.length,
-                      ),
-                    );
-                  } else {
-                    return SliverList(
-                      delegate: SliverChildBuilderDelegate(
-                        (context, index) => const PostLoadingListItem(),
-                        childCount: 6,
-                      ),
-                    );
-                  }
-                },
               ),
+            ],
+          ),
+          const PersistentDividerHeader(),
+          SliverPadding(
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+            sliver: BlocConsumer<PostBloc, PostState>(
+              listener: (context, state) {
+                // if (state is ScrollToTop) {
+                //   _scrollController.animateTo(
+                //     0,
+                //     duration: const Duration(milliseconds: 300),
+                //     curve: Curves.easeInOut,
+                //   );
+                // }
+              },
+              builder: (context, state) {
+                if (state.isLoading != true) {
+                  return SliverList(
+                    delegate: SliverChildBuilderDelegate(
+                      (context, index) => ScrollAnimationWrapper(
+                        controller: _scrollController,
+                        child: state.posts[index],
+                      ),
+                      childCount: state.posts.length,
+                    ),
+                  );
+                } else {
+                  return SliverList.separated(
+                    separatorBuilder: (_, __) => const SizedBox(height: 6),
+                    itemBuilder: (_, __) => const PostLoadingListItem(),
+                    itemCount: 5,
+                  );
+                }
+              },
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

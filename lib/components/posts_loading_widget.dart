@@ -56,13 +56,13 @@ class PostLoadingListItem extends StatelessWidget {
                   ColoredContainer(
                     width: 150,
                     height: 16,
-                    radius: 10,
+                    radius: 5,
                   ),
                   SizedBox(height: 4),
                   ColoredContainer(
                     width: 80,
                     height: 14,
-                    radius: 10,
+                    radius: 5,
                   ),
                 ],
               ),
@@ -94,7 +94,7 @@ class PostLoadingListItem extends StatelessWidget {
             ColoredContainer(
               width: 36,
               height: 20,
-              radius: 12,
+              radius: 8,
             ),
             SizedBox(
               width: 16,
@@ -102,7 +102,7 @@ class PostLoadingListItem extends StatelessWidget {
             ColoredContainer(
               width: 36,
               height: 20,
-              radius: 12,
+              radius: 8,
             ),
           ],
         )

@@ -1,12 +1,14 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:async';
 
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:equatable/equatable.dart';
 // ignore: depend_on_referenced_packages
 import 'package:async/async.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:social_media_app/data/model/user.dart';
 import 'package:social_media_app/data/service/create_message_service.dart';
+import 'package:social_media_app/data/service/notification_service.dart';
 import 'package:social_media_app/repositories/socket_repo.dart';
 
 import 'package:social_media_app/cubit/auth/auth_cubit.dart';
@@ -17,12 +19,12 @@ enum TypingStatus { send, received }
 
 class ChatBloc extends HydratedBloc<ChatEvent, ChatState> {
   final AuthenticationCubit _authenticationCubit;
-  late SocketRepository _socketRepository;
+  late SocketClient _socketClient;
   RestartableTimer? _timer;
   TypingState? previousTypingState;
 
   ChatBloc(this._authenticationCubit) : super(const ChatState()) {
-    _socketRepository = SocketRepository.instance;
+    _socketClient = SocketClient.instance();
 
     on<ChatStarted>(_onStarted);
     on<ChatReceived>(_onReceived);
@@ -59,7 +61,7 @@ class ChatBloc extends HydratedBloc<ChatEvent, ChatState> {
         await GetChatsService(token: _authenticationCubit.getToken(), page: 0)
             .call();
     emit(state.copyWith(chats: chats));
-    _registerChatListeners();
+    registerChatListeners();
   }
 
   _onSent(ChatSent event, Emitter<ChatState> emit) async {
@@ -119,19 +121,21 @@ class ChatBloc extends HydratedBloc<ChatEvent, ChatState> {
     }
   }
 
-  @override
-  Future<void> close() {
-    _socketRepository.close();
-    return super.close();
-  }
-
-  void _registerChatListeners() async {
-    _socketRepository.listen('newMessage', (newMessage) {
+  void registerChatListeners() async {
+    _socketClient.listen('newMessage', (newMessage) {
       final newChat = Chat.fromMap(newMessage);
       add(ChatReceived(chat: newChat));
+      NotificationService.showNotification(
+        title: newMessage['user']['name'],
+        body: newMessage['message'],
+        notificationType: NotificationType.message,
+        // payload: {
+        //   'chatId': newChat.id,
+        // },
+      );
     });
 
-    _socketRepository.listen('typing', (typingMessage) {
+    _socketClient.listen('typing', (typingMessage) {
       final User user = typingMessage['user'];
       print('Someone is typing...');
       add(TypingEvent(
@@ -139,6 +143,7 @@ class ChatBloc extends HydratedBloc<ChatEvent, ChatState> {
         status: TypingStatus.received,
       ));
     });
+    print('Chat listeners registered');
   }
 
   FutureOr<void> _onTyping(TypingEvent event, Emitter<ChatState> emit) {
@@ -146,7 +151,7 @@ class ChatBloc extends HydratedBloc<ChatEvent, ChatState> {
     final TypingStatus status = event.status;
     print('I am typing...');
     if (status == TypingStatus.send) {
-      _socketRepository.send('typing', {
+      _socketClient.send('typing', {
         'user': user,
       });
     } else {

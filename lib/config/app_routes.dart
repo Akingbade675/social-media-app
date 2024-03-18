@@ -13,6 +13,7 @@ import 'package:social_media_app/pages/my_profile_page.dart';
 import 'package:social_media_app/pages/my_sign_up_page.dart';
 import 'package:social_media_app/pages/nearby_page.dart';
 import 'package:social_media_app/pages/other_user_profile_page_copy.dart';
+import 'package:social_media_app/pages/package_chat_page.dart';
 import 'package:social_media_app/pages/video_call_page.dart';
 
 class AppRoutes {
@@ -61,6 +62,8 @@ class AppRoutes {
   static const otherUserProfilePage = OtherUserProfilePage();
 
   static const videoCallPage = VideoCallPage(isCaller: true);
+
+  static const packageChatPage = PackageChatPage();
 
   static const login = '/login';
   static const signup = '/signup';

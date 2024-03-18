@@ -23,7 +23,8 @@ class AuthenticationCubit extends Cubit<AuthenticationState> {
   void appStarted() async {
     final String token = await userRepository.getToken();
     if (token.isNotEmpty) {
-      final User user = await userRepository.getUser();
+      final User user = await userRepository
+          .getUser(); // TODO: Remove this, instead get user from server using the token
       emit(AuthenticationAuthenticated(token: token, user: user));
     } else {
       emit(AuthenticationUnauthenticated());
@@ -32,7 +33,7 @@ class AuthenticationCubit extends Cubit<AuthenticationState> {
 
   void loggedIn({required String token, required User user}) async {
     await userRepository.persistToken(token);
-    await userRepository.persistUser(user);
+    await userRepository.persistUser(user); // TODO: Remove this
     emit(AuthenticationAuthenticated(token: token, user: user));
   }
 

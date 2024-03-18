@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_media_app/components/input_bottom.dart';
+import 'package:social_media_app/components/user_avatar.dart';
 import 'package:social_media_app/cubit/emoji_keyboard_cubit.dart';
 import 'package:social_media_app/styles/app_colors.dart';
 import 'package:social_media_app/styles/app_text_styles.dart';
@@ -18,6 +19,8 @@ class CommentBottomSheet extends StatelessWidget {
         initialChildSize: 0.5,
         maxChildSize: 0.95,
         minChildSize: 0.35,
+        snap: true,
+        snapSizes: const [0.95, 0.5, 0.35],
         builder: (_, controller) {
           return Container(
             margin:
@@ -43,11 +46,11 @@ class CommentBottomSheet extends StatelessWidget {
                         minVerticalPadding: 0,
                         dense: false,
                         // visualDensity: VisualDensity.compact,
-                        leading: CircleAvatar(
-                          radius: 12,
-                          backgroundColor: Colors.grey,
-                          backgroundImage: AssetImage(
-                              'assets/temp/girl_${Random().nextInt(5) + 1}.jpg'),
+                        leading: UserAvatar(
+                          borderRadius: 4,
+                          size: 25,
+                          imageUrl:
+                              'assets/temp/girl_${Random().nextInt(5) + 1}.jpg',
                         ),
                         title: RichText(
                           text: TextSpan(
@@ -60,9 +63,9 @@ class CommentBottomSheet extends StatelessWidget {
                                 ),
                               ),
                               TextSpan(
-                                text: ' - ${5 * index} mins ago',
+                                text: ' - ${5 * index + 1} mins ago',
                                 style: TextStyle(
-                                  color: AppColor.grey,
+                                  color: AppColor.greyOpaque,
                                   fontSize: 12,
                                 ),
                               ),
@@ -76,10 +79,29 @@ class CommentBottomSheet extends StatelessWidget {
                     },
                   ),
                 ),
-                Divider(color: AppColor.greyOpaque),
-                InputBottom(
-                  onButtonPressed: () {},
-                  controller: TextEditingController(),
+                Divider(color: AppColor.greyOpaque, height: 1),
+                Row(
+                  children: [
+                    const UserAvatar(
+                      size: 25,
+                      borderRadius: 4,
+                    ),
+                    const SizedBox(width: 6),
+                    Expanded(
+                      child: TextButton(
+                        onPressed: () {},
+                        style: TextButton.styleFrom(
+                          backgroundColor: AppColor.fieldColor,
+                          alignment: Alignment.centerLeft,
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 8, horizontal: 6),
+                          textStyle:
+                              AppText.body2.copyWith(color: AppColor.grey),
+                        ),
+                        child: const Text('Add a comment'),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -147,7 +169,7 @@ class CommentHeader extends StatelessWidget {
               ],
             ),
           ),
-          Divider(color: AppColor.greyOpaque),
+          Divider(color: AppColor.greyOpaque, height: 1),
         ],
       ),
     );

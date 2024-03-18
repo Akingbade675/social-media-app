@@ -90,78 +90,9 @@ class PostItem extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            LikeButton(
-              size: 20,
-              circleColor: const CircleColor(
-                start: AppColor.secondaryDark,
-                end: AppColor.secondaryDark,
-              ),
-              bubblesColor: const BubblesColor(
-                dotPrimaryColor: AppColor.secondaryDark,
-                dotSecondaryColor: AppColor.secondaryDark,
-              ),
-              isLiked: post.isLiked,
-              likeCountPadding: const EdgeInsets.only(left: 8),
-              likeBuilder: (bool isLiked) {
-                return isLiked
-                    ? SvgPicture.asset(
-                        AppIcons.icFavoriteFilled,
-                        colorFilter: const ColorFilter.mode(
-                          AppColor.secondaryDark,
-                          BlendMode.srcIn,
-                        ),
-                        width: 20,
-                        height: 20,
-                      )
-                    : SvgPicture.asset(
-                        AppIcons.icFavorite,
-                        colorFilter: ColorFilter.mode(
-                          AppColor.greyOpaque,
-                          BlendMode.srcIn,
-                        ),
-                        width: 20,
-                        height: 20,
-                      );
-              },
-              likeCount: post.likesCount,
-              onTap: (isLiked) {
-                print('Liking post ${post.id}');
-                context.read<PostCubit>().likePost(post.id);
-                return Future.value(!isLiked);
-              },
-            ),
+            AnimatedLikeButton(post: post),
             const SizedBox(width: 8),
-            TextButton.icon(
-              style: TextButton.styleFrom(
-                padding: EdgeInsets.zero,
-                visualDensity: VisualDensity.compact,
-              ),
-              onPressed: () {
-                showModalBottomSheet(
-                  context: context,
-                  isScrollControlled: true,
-                  backgroundColor: Colors.transparent,
-                  transitionAnimationController: AnimationController(
-                    vsync: Navigator.of(context),
-                    duration: const Duration(milliseconds: 300),
-                  ),
-                  builder: (context) => const CommentBottomSheet(),
-                );
-              },
-              icon: SvgPicture.asset(
-                AppIcons.icMessage,
-                colorFilter: ColorFilter.mode(
-                  AppColor.greyOpaque,
-                  BlendMode.srcIn,
-                ),
-                width: 20,
-                height: 20,
-              ),
-              label: Text(
-                post.commentsCount.toString(),
-                style: AppText.body2.copyWith(color: AppColor.greyOpaque),
-              ),
-            ),
+            CommentButton(post: post),
           ],
         )
       ],
@@ -193,4 +124,105 @@ class PostItem extends StatelessWidget {
 //       );
 //     }
 //   }
+}
+
+class CommentButton extends StatelessWidget {
+  const CommentButton({
+    super.key,
+    required this.post,
+  });
+
+  final Post post;
+
+  @override
+  Widget build(BuildContext context) {
+    return TextButton.icon(
+      style: TextButton.styleFrom(
+        padding: EdgeInsets.zero,
+        visualDensity: VisualDensity.compact,
+      ),
+      onPressed: () {
+        showModalBottomSheet(
+          context: context,
+          isScrollControlled: true,
+          backgroundColor: Colors.transparent,
+          transitionAnimationController: AnimationController(
+            vsync: Navigator.of(context),
+            duration: const Duration(milliseconds: 300),
+          ),
+          builder: (context) => const CommentBottomSheet(),
+        );
+      },
+      icon: SvgPicture.asset(
+        AppIcons.icMessage,
+        colorFilter: ColorFilter.mode(
+          AppColor.grey,
+          BlendMode.srcIn,
+        ),
+        width: 20,
+        height: 20,
+      ),
+      label: Text(
+        post.commentsCount.toString(),
+        style: AppText.body2.copyWith(color: AppColor.grey),
+      ),
+    );
+  }
+}
+
+class AnimatedLikeButton extends StatelessWidget {
+  const AnimatedLikeButton({
+    super.key,
+    required this.post,
+  });
+
+  final Post post;
+
+  @override
+  Widget build(BuildContext context) {
+    return LikeButton(
+      size: 20,
+      circleColor: const CircleColor(
+        start: AppColor.secondaryDark,
+        end: AppColor.secondaryDark,
+      ),
+      bubblesColor: const BubblesColor(
+        dotPrimaryColor: AppColor.secondaryDark,
+        dotSecondaryColor: AppColor.secondaryDark,
+      ),
+      isLiked: post.isLiked,
+      likeCountPadding: const EdgeInsets.only(left: 8),
+      likeBuilder: (bool isLiked) {
+        return isLiked
+            ? SvgPicture.asset(
+                AppIcons.icFavoriteFilled,
+                colorFilter: const ColorFilter.mode(
+                  AppColor.secondaryDark,
+                  BlendMode.srcIn,
+                ),
+                width: 20,
+                height: 20,
+              )
+            : SvgPicture.asset(
+                AppIcons.icFavorite,
+                colorFilter: ColorFilter.mode(
+                  AppColor.greyOpaque,
+                  BlendMode.srcIn,
+                ),
+                width: 20,
+                height: 20,
+              );
+      },
+      likeCount: post.likesCount,
+      countDecoration: (count, likeCount) => Text(
+        likeCount.toString(),
+        style: AppText.body2.copyWith(color: AppColor.grey),
+      ),
+      onTap: (isLiked) {
+        print('Liking post ${post.id}');
+        context.read<PostCubit>().likePost(post.id);
+        return Future.value(!isLiked);
+      },
+    );
+  }
 }

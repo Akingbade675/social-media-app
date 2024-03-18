@@ -18,6 +18,7 @@ import 'package:social_media_app/cubit/post/post_cubit.dart';
 import 'package:social_media_app/cubit/post/post_cubit_copy.dart';
 import 'package:social_media_app/cubit/users/users_cubit.dart';
 import 'package:social_media_app/cubit/video_call/video_call_cubit.dart';
+import 'package:social_media_app/data/service/background_service.dart';
 import 'package:social_media_app/data/service/notification_service.dart';
 import 'package:social_media_app/repositories/socket_repo.dart';
 import 'package:social_media_app/repositories/user_repo.dart';
@@ -31,11 +32,13 @@ void main() async {
   Connectivity connectivity = Connectivity();
 
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-    statusBarColor: Colors.transparent,
+    statusBarColor: Colors.grey,
     statusBarIconBrightness: Brightness.dark,
   ));
 
   await NotificationService.initializeNotification();
+
+  await BackgroundService.initializeService();
 
   runApp(
     RepositoryProvider(
@@ -133,10 +136,13 @@ class _MyAppState extends State<MyApp> {
                 body: LoadingBar(),
               );
             } else if (authState is AuthenticationAuthenticated) {
-              SocketRepository.setInstance(context.read<AuthenticationCubit>());
-              SocketRepository.instance.initializeSocket();
+              SocketClient.instance(token: authState.token).connect();
+              context.read<ChatBloc>().registerChatListeners();
               context.read<VideoCallCubit>().init();
-
+              // BackgroundService.startService(
+              //   context.read<ChatBloc>(),
+              //   context.read<VideoCallCubit>(),
+              // );
               return AppRoutes.mainPage;
             } else {
               return AppRoutes.loginPage;
@@ -145,11 +151,5 @@ class _MyAppState extends State<MyApp> {
         ),
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    SocketRepository.instance.close();
-    super.dispose();
   }
 }

@@ -37,7 +37,7 @@ class Chat extends Equatable {
     return Chat(
       id: map['id'] as String,
       message: map['message'] as String,
-      image: map['image'] != null ? map['image'] as String : null,
+      image: map['image_url'] != null ? map['image_url'] as String : null,
       createdAt: DateTime.parse(map['createdAt'] as String),
       updatedAt: DateTime.parse(map['updatedAt'] as String),
       user: User.fromMap(map['user'] as Map<String, dynamic>),
@@ -60,4 +60,7 @@ class Chat extends Equatable {
       user,
     ];
   }
+
+  @override
+  bool get stringify => true;
 }

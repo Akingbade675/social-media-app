@@ -14,7 +14,7 @@ class FrostedGlassCard extends StatelessWidget {
   const FrostedGlassCard({
     Key? key,
     this.width = double.infinity,
-    this.height = 60,
+    this.height = 68,
     required this.borderRadius,
     required this.child,
     required this.padding,
@@ -25,8 +25,8 @@ class FrostedGlassCard extends StatelessWidget {
     return ClipRRect(
       borderRadius: BorderRadius.circular(borderRadius),
       child: Container(
-        // width: width,
-        // height: height,
+        width: width,
+        height: height,
         padding: padding,
         color: Colors.transparent,
         child: Stack(

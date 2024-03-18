@@ -37,7 +37,7 @@ class User extends Equatable {
       id: map['id'] as String,
       email: (map['email'] ?? '') as String,
       name: map['name'] as String,
-      avatarUrl: map['avatarUrl'] as String?,
+      avatarUrl: (map['avatarUrl'] ?? '') as String,
       posts: map['posts'] != null
           ? List<Post>.from((map['posts'] as List<dynamic>)
               .map((x) => Post.fromMap(x as Map<String, dynamic>)))

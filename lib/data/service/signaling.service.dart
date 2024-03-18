@@ -6,14 +6,14 @@ import 'package:social_media_app/repositories/socket_repo.dart';
 import 'package:social_media_app/repositories/webrtc_repo.dart';
 
 class Signaling {
-  WebRTCRepository _rtcRepository = WebRTCRepository();
-  SocketRepository _socketRepository = SocketRepository.instance;
+  final WebRTCRepository _rtcRepository = WebRTCRepository();
+  final SocketClient _socketClient = SocketClient.instance();
 
   VideoCallCubit videoCallCubit;
 
   RTCPeerConnection? _peerConnection;
   MediaStream? _localStream;
-  MediaStream? _remoteStream;
+  // MediaStream? _remoteStream;
   final List<RTCIceCandidate> _rtcIceCandidates = [];
 
   Signaling({required this.videoCallCubit});
@@ -29,13 +29,13 @@ class Signaling {
       _peerConnection?.addTrack(track, localStream);
     });
 
-    _socketRepository.listen('outgoing:call:accepted', (data) async {
+    _socketClient.listen('outgoing:call:accepted', (data) async {
       _rtcRepository.setRemoteDescription(
         _peerConnection!,
         await _rtcRepository.createRTCSessionDescriptionFromMap(data['answer']),
       );
 
-      _socketRepository.listen('outgoing:call:candidate', (candidate) async {
+      _socketClient.listen('outgoing:call:candidate', (candidate) async {
         _rtcRepository.addCandidate(
           _peerConnection!,
           await _rtcRepository.createIceCandidateFromMap(candidate),
@@ -43,14 +43,14 @@ class Signaling {
       });
 
       for (var candidate in _rtcIceCandidates) {
-        _socketRepository.send('outgoing:call:candidate', {
+        _socketClient.send('outgoing:call:candidate', {
           'roomId': videoCallCubit.state.roomId,
           'candidate': candidate.toMap()
         });
       }
 
       _peerConnection?.onIceCandidate = (candidate) {
-        _socketRepository.send('outgoing:call:candidate', {
+        _socketClient.send('outgoing:call:candidate', {
           'roomId': videoCallCubit.state.roomId,
           'candidate': candidate.toMap()
         });
@@ -71,9 +71,9 @@ class Signaling {
       'offer': offer.toMap(),
     };
     print(payload);
-    _socketRepository.send('outgoing:call', payload);
+    _socketClient.send('outgoing:call', payload);
 
-    _socketRepository.listen(
+    _socketClient.listen(
       'outgoing:call:ack',
       (_) => {
         videoCallCubit.setCallStatus(CallStatus.ringing),
@@ -97,7 +97,7 @@ class Signaling {
     registerPeerConnectionListeners();
 
     _peerConnection?.onIceCandidate = (RTCIceCandidate candidate) {
-      _socketRepository.send('incoming:call:candidate', {
+      _socketClient.send('incoming:call:candidate', {
         'roomId': videoCallCubit.state.roomId,
         'candidate': candidate,
       });
@@ -120,7 +120,7 @@ class Signaling {
 
     // Send answer and ICE candidates to peer via socket
     print('Answer: ${answer!.toMap()}');
-    _socketRepository.send(
+    _socketClient.send(
       'incoming:call:accepted',
       {
         'roomId': videoCallCubit.state.roomId,
@@ -129,7 +129,7 @@ class Signaling {
     );
 
     // TODO: Listen for remote ICE candidates and add them to the local PeerConnection
-    _socketRepository.listen(
+    _socketClient.listen(
       'incoming:call:candidate',
       (candidate) async {
         _rtcRepository.addCandidate(

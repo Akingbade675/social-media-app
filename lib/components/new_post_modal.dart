@@ -131,25 +131,24 @@ class CreatePostModalSheet extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                IconButton(
-                  onPressed: () => Navigator.pop(context),
-                  icon: const Icon(Icons.close),
-                ),
+                const CreatingPostCloseButton(),
                 const SizedBox(width: 12),
                 const Text('Share Post', style: AppText.subtitle3),
                 const Spacer(),
                 Builder(builder: (context) {
                   final state = context.watch<CreatePostCubit>().state;
                   return TextButton(
-                    onPressed:
-                        (state is CreatingPostState && state.message.isNotEmpty)
-                            ? () => createPost(context)
-                            : null,
+                    onPressed: (state is CreatingPostState &&
+                            (state.message.isNotEmpty ||
+                                state.image.isNotEmpty))
+                        ? () => createPost(context)
+                        : null,
                     style: TextButton.styleFrom(
                       padding: const EdgeInsets.symmetric(horizontal: 18),
                       backgroundColor: AppColor.primaryDark,
                       visualDensity: VisualDensity.comfortable,
-                      disabledBackgroundColor: AppColor.grey.withOpacity(0.3),
+                      disabledBackgroundColor:
+                          AppColor.primaryDark.withOpacity(0.3),
                       textStyle: const TextStyle(
                         fontWeight: FontWeight.bold,
                       ),
@@ -210,7 +209,8 @@ class CreatePostModalSheet extends StatelessWidget {
                         imageSource: ImageSource.camera),
                     // disable camera button if image is already picked
                     icon: const Icon(Icons.photo_camera),
-                    color: AppColor.black.withOpacity(0.7),
+                    color: AppColor.primaryDark,
+                    disabledColor: AppColor.primaryDark.withOpacity(0.3),
                     visualDensity: VisualDensity.compact,
                   ),
                   IconButton(
@@ -218,7 +218,8 @@ class CreatePostModalSheet extends StatelessWidget {
                     onPressed: _pickImageFrom(state, context,
                         imageSource: ImageSource.gallery),
                     icon: const Icon(Icons.photo),
-                    color: AppColor.black.withOpacity(0.7),
+                    color: AppColor.primaryDark,
+                    disabledColor: AppColor.primaryDark.withOpacity(0.3),
                     visualDensity: VisualDensity.compact,
                   ),
                 ],
@@ -243,6 +244,63 @@ class CreatePostModalSheet extends StatelessWidget {
     context.read<CreatePostCubit>().createPost(token).then((value) {
       Navigator.of(context).pop();
     });
+  }
+}
+
+class CreatingPostCloseButton extends StatelessWidget {
+  const CreatingPostCloseButton({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      onPressed: () {
+        // if post is being created, show alert dialog
+        final state = context.read<CreatePostCubit>().state;
+        if (state is CreatingPostState &&
+            (state.message.isNotEmpty || state.image.isNotEmpty)) {
+          showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                backgroundColor: AppColor.white,
+                title: const Text('Save Post?'),
+                titleTextStyle: AppText.subtitle1,
+                content: const Text(
+                    'You can save this post as draft and continue editing later'),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      Navigator.of(context).pop();
+                    },
+                    child: Text(
+                      'Delete',
+                      style:
+                          AppText.body1.copyWith(fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      // TODO: save post as draft
+                      Navigator.of(context).pop();
+                      Navigator.of(context).pop();
+                    },
+                    child: Text('Save',
+                        style: AppText.body1
+                            .copyWith(fontWeight: FontWeight.bold)),
+                  ),
+                ],
+              );
+            },
+          );
+        } else {
+          Navigator.of(context).pop();
+        }
+      },
+      icon: const Icon(Icons.close),
+    );
   }
 }
 

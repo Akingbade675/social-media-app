@@ -90,18 +90,23 @@ class _VideoCallPageState extends State<VideoCallPage> {
         fit: StackFit.expand,
         children: [
           Positioned.fill(
-        child: Container(
-          decoration: BoxDecoration(
-            image: DecorationImage(image: const AssetImage('assets/temp/girl_4.jpg'), fit: BoxFit.cover, colorFilter: ColorFilter.mode(Colors.black.withOpacity(0.5), BlendMode.dstATop),),
-          ),
-          child: BackdropFilter(
-              filter: ImageFilter.blur(
-                sigmaX: 3,
-                sigmaY: 3,
+            child: Container(
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: const AssetImage('assets/temp/girl_4.jpg'),
+                  fit: BoxFit.cover,
+                  colorFilter: ColorFilter.mode(
+                      Colors.black.withOpacity(0.5), BlendMode.dstATop),
+                ),
               ),
-              child: Container(),
+              child: BackdropFilter(
+                filter: ImageFilter.blur(
+                  sigmaX: 2,
+                  sigmaY: 2,
+                ),
+                child: Container(),
+              ),
             ),
-        ),
           ),
           Positioned.fill(
             child: Builder(
@@ -123,34 +128,34 @@ class _VideoCallPageState extends State<VideoCallPage> {
               },
             ),
           ),
-          Positioned(
-            top: 100,
-            left: 20,
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  'Mare Smith',
-                  style: AppText.subtitle2.copyWith(color: AppColor.white),
-                ),
-                const SizedBox(height: 20),
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 6,
-                    vertical: 4,
-                  ),
-                  decoration: BoxDecoration(
-                    color: AppColor.primary,
-                    borderRadius: BorderRadius.circular(6),
-                  ),
-                  child: Text(
-                    '',
-                    style: AppText.subtitle3.copyWith(color: AppColor.white),
-                  ),
-                ),
-              ],
-            ),
-          ),
+          // Positioned(
+          //   top: 100,
+          //   left: 20,
+          //   child: Row(
+          //     mainAxisSize: MainAxisSize.min,
+          //     children: [
+          //       Text(
+          //         'Mare Smith',
+          //         style: AppText.subtitle2.copyWith(color: AppColor.white),
+          //       ),
+          //       const SizedBox(height: 20),
+          //       Container(
+          //         padding: const EdgeInsets.symmetric(
+          //           horizontal: 6,
+          //           vertical: 4,
+          //         ),
+          //         decoration: BoxDecoration(
+          //           color: AppColor.primary,
+          //           borderRadius: BorderRadius.circular(6),
+          //         ),
+          //         child: Text(
+          //           '',
+          //           style: AppText.subtitle3.copyWith(color: AppColor.white),
+          //         ),
+          //       ),
+          //     ],
+          //   ),
+          // ),
           Positioned(
             bottom: 15,
             left: 25,
@@ -177,7 +182,7 @@ class _VideoCallPageState extends State<VideoCallPage> {
                     elevation: 2,
                     child: Container(
                       padding: const EdgeInsets.all(1.5),
-                      width: 120,
+                      width: 110,
                       height: 150,
                       decoration: BoxDecoration(
                         color: AppColor.white,
@@ -205,11 +210,11 @@ class _VideoCallPageState extends State<VideoCallPage> {
                       callIconButton(icon: Icons.videocam_off),
                       callIconButton(icon: Icons.mic_off),
                       IconButton.filled(
-                        padding: const EdgeInsets.all(12),
+                        padding: const EdgeInsets.all(16),
                         style: IconButton.styleFrom(
                           backgroundColor: Colors.red,
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(6),
+                            borderRadius: BorderRadius.circular(10),
                           ),
                         ),
                         icon: const Icon(
@@ -240,8 +245,10 @@ class _VideoCallPageState extends State<VideoCallPage> {
   }) {
     return IconButton.filled(
       icon: Icon(icon, color: AppColor.white),
+      highlightColor: color,
+      focusColor: color,
       style: IconButton.styleFrom(
-        backgroundColor: Colors.transparent,
+        backgroundColor: color,
       ),
       onPressed: onPressed,
     );

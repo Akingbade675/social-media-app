@@ -60,7 +60,7 @@ class _NearbyPageState extends State<NearbyPage> {
           }
           return Stack(
             children: [
-              _buildGoogleMap((usersState as UsersLoaded).users),
+              _buildMap((usersState as UsersLoaded).users),
               Positioned(
                 bottom: 0,
                 left: 0,
